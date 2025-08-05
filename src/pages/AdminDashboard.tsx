@@ -650,8 +650,6 @@ function SmtpConfig() {
 
         {/* Sender Information */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h2 className="text-xl font-semibold mb-4"> Continuing directly from the previous response:
-
           <h2 className="text-xl font-semibold mb-4">Sender Information</h2>
           <div className="grid grid-cols-2 gap-6">
             <div>

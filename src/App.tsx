@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import SignUpForm from './pages/SignUpForm';
-import AdminDashboard from './pages/AdminDashboard';
-import CollectorDashboard from './pages/CollectorDashboard';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import { CollectorDashboard } from './pages/collector';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Facebook, Twitter, LinkedIn, Instagram } from 'lucide-react';
+import { Shield, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 
 export default function Footer() {
   return (

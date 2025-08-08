@@ -1038,5 +1038,3 @@ function AdminSettings() {
 }
 
 export default AdminDashboard;
-
-export default AdminDashboard

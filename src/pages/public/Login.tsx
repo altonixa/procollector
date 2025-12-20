@@ -1,5 +1,5 @@
 import { Button } from "../../components/ui/Button";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
 import { ShieldCheck, ArrowLeft, User, Users, Eye, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";

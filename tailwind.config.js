@@ -21,8 +21,8 @@ export default {
                         soft: '#1e293b',
                     },
                     dustGold: {
-                        light: '#F4EBDC',
-                        DEFAULT: '#C5A059', // Dust Gold
+                        light: '#FDFCFB',
+                        DEFAULT: '#FAF7F2', // Light Dust
                         dark: '#A6864A',
                     },
                     light: '#F8FAFC',

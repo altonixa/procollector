@@ -25,11 +25,6 @@ export function Home() {
                                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                             </Button>
                         </Link>
-                        <Link to="/signup">
-                            <Button size="lg" variant="outline" className="h-14 px-10 text-base font-black uppercase tracking-widest border-2 border-brand-dark/20 text-brand-dark hover:bg-brand-dark/5">
-                                Try Demo
-                            </Button>
-                        </Link>
                     </div>
                 </div>
 
@@ -155,7 +150,7 @@ export function Home() {
                         <div className="hidden md:block absolute top-[60px] left-[10%] right-[10%] h-[2px] bg-brand-green/10 -z-0" />
 
                         {[
-                            { step: '01', title: 'Register Org', desc: 'Create your secure portal, invite supervisors, and define your zones.', icon: Building2 },
+                            { step: '01', title: 'Register Org', desc: 'Create your secure portal, invite Managers, and define your zones.', icon: Building2 },
                             { step: '02', title: 'Deploy Agents', desc: 'Onboard collectors and assign them to territories or client routes.', icon: Users },
                             { step: '03', title: 'Field Collection', desc: 'Agents record collections with mandatory GPS & digital receipts.', icon: Smartphone },
                             { step: '04', title: 'Reconcile', desc: 'Compare collected funds against bank deposits in real-time.', icon: ScrollText },
@@ -183,7 +178,7 @@ export function Home() {
                         Join the councils and financial institutions using ProCollector to modernize their operations today.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link to="/signup">
+                        <Link to="/login">
                             <Button size="lg" variant="secondary" className="h-14 px-10 shadow-xl">
                                 Get Started Now
                             </Button>

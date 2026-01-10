@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
-import { Building2, Activity, Globe, Plus, Shield, CreditCard, Search, MoreVertical, Loader2 } from 'lucide-react';
+import { Building2, Activity, Plus, Shield, CreditCard, Search, MoreVertical, Loader2 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { cn } from '../../lib/utils';
 

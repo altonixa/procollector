@@ -45,9 +45,9 @@ export function Header() {
                         <p className="text-sm font-black text-white leading-none">{user?.name || 'User'}</p>
                         <p className="text-[10px] font-black text-white/50 mt-1 uppercase tracking-tight">{user?.organizationName || 'Organization'}</p>
                     </div>
-                    <button 
+                    <button
                         onClick={() => setShowLogout(!showLogout)}
-                        className="h-9 w-9 rounded-full bg-brand-slate-100 font-black text-brand-dark flex items-center justify-center cursor-pointer hover:bg-brand-slate-200 transition-colors"
+                        className="h-9 w-9 rounded-full bg-brand-dark font-black text-white flex items-center justify-center cursor-pointer hover:bg-gray-800 transition-colors"
                     >
                         {user?.name?.charAt(0).toUpperCase() || 'U'}
                     </button>

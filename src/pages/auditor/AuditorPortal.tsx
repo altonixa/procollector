@@ -1,4 +1,4 @@
-import { Shield, Eye, Download, Search, CheckCircle2, History, User, Menu, X } from 'lucide-react';
+import { Shield, Eye, Download, Search, CheckCircle2, History, User, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { useState, useEffect } from 'react';

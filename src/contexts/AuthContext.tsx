@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 
-export type UserRole = 'admin' | 'organization' | 'supervisor' | 'collector' | 'client' | 'auditor';
+export type UserRole = 'admin' | 'organization' | 'manager' | 'collector' | 'client' | 'auditor';
 
 export interface AuthUser {
   id: string;
@@ -9,6 +9,7 @@ export interface AuthUser {
   organizationName: string;
   role: UserRole;
   name: string;
+  phone?: string;
   isDemo?: boolean;
 }
 

@@ -98,12 +98,12 @@ export function DemoTest() {
                             </Card>
                         </Link>
 
-                        <Link to="/demo-supervisor?org=Test%20Organization">
+                        <Link to="/demo-Manager?org=Test%20Organization">
                             <Card className="hover:border-brand-green transition-all cursor-pointer">
                                 <CardContent className="p-4 flex items-center gap-3">
                                     <Eye className="h-6 w-6 text-brand-dark" />
                                     <div>
-                                        <div className="font-black">Supervisor</div>
+                                        <div className="font-black">Manager</div>
                                         <div className="text-xs text-brand-dark/50">Monitor field agents</div>
                                     </div>
                                 </CardContent>

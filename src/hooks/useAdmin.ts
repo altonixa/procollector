@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { RolePermissions } from '../types/adminActions';
-import type { Permission, AdminAction } from '../types/adminActions';
-import type { User, Room, Client, Deposit, SystemSettings } from '../types/admin';
+import type { AdminAction } from '../types/adminActions';
+import type { User, Room, Deposit, SystemSettings } from '../types/admin';
 
 interface UseAdminStateReturn {
   hasPermission: (action: AdminAction, targetId?: string) => boolean;
-  canAccessRoom: (roomId: string) => boolean;
+  canAccessRoom: () => boolean;
   isLoading: boolean;
   error: Error | null;
 }
@@ -37,7 +37,7 @@ export function useAdminState(): UseAdminStateReturn {
     }
   }, [user]);
 
-  const canAccessRoom = useCallback((roomId: string): boolean => {
+  const canAccessRoom = useCallback((): boolean => {
     if (!user) return false;
     
     if (user.role === 'admin') return true;

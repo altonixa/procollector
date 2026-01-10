@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Search, Download, Eye, Edit, Trash2 } from 'lucide-react';
 
 export default function ErrorManagement() {
-  const [errors, setErrors] = useState([
+  const [errors] = useState([
     {
       id: 1,
       collector: 'John Doe',

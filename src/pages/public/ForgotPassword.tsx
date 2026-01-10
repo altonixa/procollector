@@ -47,157 +47,76 @@ export function ForgotPassword() {
     };
 
     return (
-        <div className="min-h-screen bg-brand-slate-50 flex flex-col md:flex-row">
-            {/* Left side: branding */}
-            <div className="bg-brand-dark md:w-1/2 p-12 flex flex-col justify-between text-white overflow-hidden relative">
-                <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                    <div className="absolute top-1/4 left-1/4 w-[800px] h-[800px] bg-brand-green rounded-full blur-[200px]"></div>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-sm space-y-8">
+                <div className="space-y-4">
+                    <div>
+                        <Link to="/" className="inline-flex items-center text-sm font-medium text-brand-slate-500 hover:text-brand-green transition-colors">
+                            <ArrowLeft className="h-4 w-4 mr-2" /> Back to Website
+                        </Link>
+                    </div>
+                    <h3 className="text-3xl font-extrabold text-brand-dark">Reset Password</h3>
+                    <p className="text-brand-slate-500 font-medium">Enter your email address to receive reset instructions.</p>
                 </div>
 
-                <div className="relative z-10 flex items-center gap-3">
-                    <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity group">
-                        <div className="flex h-10 w-10 items-center justify-center rounded bg-brand-green font-bold text-white shadow-lg shadow-brand-green/30 px-0">P</div>
-                        <span className="text-2xl font-bold tracking-tight">ProCollector</span>
-                    </Link>
-                </div>
-
-                <div className="relative z-10 max-w-lg">
-                    <h2 className="text-4xl md:text-5xl font-bold italic leading-tight mb-8">
-                        Reset Your <br />
-                        <span className="text-brand-green">Password</span>
-                    </h2>
-                    <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                {success ? (
+                    <div className="p-6 bg-green-50 border border-green-200 rounded-lg">
                         <div className="flex items-center gap-3 mb-4">
-                            <CheckCircle className="h-5 w-5 text-brand-green" />
-                            <span className="font-bold text-sm">Secure Recovery Process</span>
+                            <Mail className="h-6 w-6 text-green-600" />
+                            <h4 className="font-bold text-green-800">Reset Email Sent!</h4>
                         </div>
-                        <p className="text-brand-slate-400 italic mb-4 leading-relaxed text-sm">
-                            We'll send a secure password reset link to your organizational email address.
+                        <p className="text-sm text-gray-700 leading-relaxed">
+                            {success}
                         </p>
-                        <div className="space-y-2 text-xs text-brand-slate-500">
-                            <div className="flex items-center gap-2">
-                                <AlertCircle className="h-3 w-3" />
-                                <span>Professional email required</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <AlertCircle className="h-3 w-3" />
-                                <span>Link expires in 1 hour</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <AlertCircle className="h-3 w-3" />
-                                <span>Secure verification process</span>
-                            </div>
+                        <div className="mt-6">
+                            <Button
+                                onClick={() => navigate("/login")}
+                                className="w-full h-12"
+                            >
+                                Back to Login
+                            </Button>
                         </div>
                     </div>
-                </div>
-
-                <div className="relative z-10 text-xs text-brand-slate-500 font-medium">
-                    © {new Date().getFullYear()} ProCollector. Security Grade: Enterprise SSL.
-                </div>
-            </div>
-
-            {/* Right side: form */}
-            <div className="flex-1 flex items-center justify-center p-8 bg-white">
-                <div className="w-full max-w-md space-y-12">
-                    <div className="space-y-4">
-                        <div>
-                            <Link to="/" className="inline-flex items-center text-sm font-medium text-brand-slate-500 hover:text-brand-green transition-colors">
-                                <ArrowLeft className="h-4 w-4 mr-2" /> Back to Website
-                            </Link>
-                        </div>
-                        <h3 className="text-3xl font-extrabold text-brand-dark">Reset Password</h3>
-                        <p className="text-brand-slate-500 font-medium">Enter your organizational email address to receive reset instructions.</p>
-                    </div>
-
-                    {success ? (
-                        <div className="p-6 bg-brand-green/10 border border-brand-green/20 rounded-xl">
-                            <div className="flex items-center gap-3 mb-4">
-                                <Mail className="h-6 w-6 text-brand-green" />
-                                <h4 className="font-bold text-brand-green">Reset Email Sent!</h4>
+                ) : (
+                    <form className="space-y-8" onSubmit={handleSubmit}>
+                        <div className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold uppercase tracking-wider text-gray-500">Email Address</label>
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full border-b-2 border-gray-200 focus:border-green-500 py-3 text-lg font-medium focus:outline-none transition-colors"
+                                    placeholder="your-email@example.com"
+                                    required
+                                />
                             </div>
-                            <p className="text-sm text-brand-dark/70 leading-relaxed">
-                                {success}
+                        </div>
+
+                        {error && (
+                            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                                <p className="text-sm font-medium text-red-800">{error}</p>
+                            </div>
+                        )}
+
+                        <div className="space-y-4 pt-10">
+                            <Button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="w-full h-14 text-lg"
+                            >
+                                {isSubmitting ? "Sending..." : "Send Reset Link"}
+                            </Button>
+                            <p className="text-center text-sm text-gray-400 font-medium">
+                                Remember your password? <Link to="/login" className="text-gray-900 font-bold hover:underline">Sign In</Link>
                             </p>
-                            <div className="mt-4 space-y-2 text-xs text-brand-dark/50">
-                                <p>• Check your spam folder if you don't see the email</p>
-                                <p>• Reset link is valid for 1 hour</p>
-                                <p>• Contact support if you need assistance</p>
-                            </div>
-                            <div className="mt-6">
-                                <Button 
-                                    onClick={() => navigate("/login")}
-                                    className="w-full h-12"
-                                >
-                                    Back to Login
-                                </Button>
-                            </div>
                         </div>
-                    ) : (
-                        <>
-                            <form className="space-y-8" onSubmit={handleSubmit}>
-                                <div className="space-y-6">
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-wider text-brand-slate-500">Professional Email Address</label>
-                                        <div className="relative">
-                                            <input
-                                                type="email"
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
-                                                className="w-full border-b-2 border-brand-slate-200 focus:border-brand-green py-3 text-lg font-medium focus:outline-none transition-colors"
-                                                placeholder="admin@your-organization.gov"
-                                                required
-                                            />
-                                            {email && (
-                                                <div className="absolute right-0 top-3">
-                                                    {isProfessionalEmail(email) ? (
-                                                        <CheckCircle className="h-5 w-5 text-brand-green" />
-                                                    ) : (
-                                                        <AlertCircle className="h-5 w-5 text-rose-500" />
-                                                    )}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <p className="text-xs text-brand-slate-500">
-                                            Must be a professional organizational email address
-                                        </p>
-                                    </div>
-                                </div>
+                    </form>
+                )}
 
-                                {error && (
-                                    <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                                        <p className="text-sm font-medium text-red-800">{error}</p>
-                                    </div>
-                                )}
-
-                                <div className="space-y-4 pt-10">
-                                    <Button 
-                                        type="submit"
-                                        disabled={isSubmitting}
-                                        className="w-full h-14 text-lg shadow-lg shadow-brand-green/20"
-                                    >
-                                        {isSubmitting ? "Sending..." : "Send Reset Link"}
-                                    </Button>
-                                    <p className="text-center text-sm text-brand-slate-400 font-medium">
-                                        Don't have an account? <Link to="/signup" className="text-brand-dark font-bold hover:underline">Sign Up</Link>
-                                    </p>
-                                </div>
-                            </form>
-
-                            <div className="border-t border-brand-slate-50 pt-8">
-                                <h4 className="text-sm font-bold text-brand-dark/60 uppercase tracking-widest mb-4">Need Help?</h4>
-                                <Link to="/contact">
-                                    <Button variant="outline" className="w-full h-12">
-                                        Contact Support
-                                    </Button>
-                                </Link>
-                            </div>
-                        </>
-                    )}
-
-                    <div className="pt-20 border-t border-brand-slate-50 flex items-center justify-center gap-3 grayscale opacity-30">
-                        <ShieldCheck className="h-5 w-5" />
-                        <span className="text-xs font-bold tracking-widest uppercase">Verified Secure</span>
-                    </div>
+                <div className="pt-20 border-t border-gray-200 flex items-center justify-center gap-3 grayscale opacity-30">
+                    <ShieldCheck className="h-5 w-5" />
+                    <span className="text-xs font-bold tracking-widest uppercase">Verified Secure</span>
                 </div>
             </div>
         </div>

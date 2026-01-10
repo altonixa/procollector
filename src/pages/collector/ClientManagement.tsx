@@ -1,13 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Search, Filter, Download, Eye, Edit, Trash2, Plus, X, Save } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
+
+interface Client {
+  id: string;
+  fullName?: string;
+  name?: string;
+  email: string;
+  phone: string;
+  address?: string;
+  quarter?: string;
+  collectionDay?: string;
+  status: 'Active' | 'Inactive' | 'active' | 'inactive';
+}
 
 export default function ClientManagement() {
-  const [clients, setClients] = useState([]);
+  const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [editingClient, setEditingClient] = useState(null);
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [editingClient, setEditingClient] = useState<Client | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -41,51 +52,21 @@ export default function ClientManagement() {
     }
   };
 
-  const handleAddClient = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('/api/v1/clients', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          roomNumber: formData.address,
-          quarter: formData.collectionDay
-        })
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setShowAddModal(false);
-        setFormData({ name: '', email: '', phone: '', address: '', collectionDay: '', status: 'Active' });
-        fetchClients();
-        alert('Client added successfully!');
-      } else {
-        alert(data.message || 'Failed to add client');
-      }
-    } catch (error) {
-      console.error('Failed to add client:', error);
-      alert('Failed to add client');
-    }
-  };
 
-  const handleEditClient = (client) => {
+  const handleEditClient = (client: Client) => {
     setEditingClient(client);
     setFormData({
-      name: client.fullName || client.name,
-      email: client.email,
-      phone: client.phone,
-      address: client.address,
+      name: client.fullName || client.name || '',
+      email: client.email || '',
+      phone: client.phone || '',
+      address: client.address || '',
       collectionDay: client.collectionDay || '',
-      status: client.status
+      status: client.status as 'Active' | 'Inactive'
     });
   };
 
   const handleUpdateClient = async () => {
+    if (!editingClient) return;
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`/api/v1/clients/${editingClient.id}`, {
@@ -118,7 +99,7 @@ export default function ClientManagement() {
     }
   };
 
-  const handleDeleteClient = async (clientId) => {
+  const handleDeleteClient = async (clientId: string) => {
     if (!confirm('Are you sure you want to delete this client?')) return;
 
     try {
@@ -156,13 +137,13 @@ export default function ClientManagement() {
           <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Client Management</h1>
           <p className="text-sm text-gray-600 mt-1">Manage your client portfolio</p>
         </div>
-        <button
-          onClick={() => setShowAddModal(true)}
+        <Link
+          to="../add-client"
           className="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Client
-        </button>
+        </Link>
       </div>
 
       {/* Search & Filters */}
@@ -214,7 +195,7 @@ export default function ClientManagement() {
                       <p className="text-sm text-gray-500">{client.phone}</p>
                     </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      client.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      client.status === 'Active' || client.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                     }`}>
                       {client.status}
                     </span>
@@ -286,7 +267,7 @@ export default function ClientManagement() {
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          client.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          client.status === 'Active' || client.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                         }`}>
                           {client.status}
                         </span>
@@ -319,17 +300,16 @@ export default function ClientManagement() {
         )}
       </div>
 
-      {/* Add/Edit Client Modal */}
-      {(showAddModal || editingClient) && (
+      {/* Edit Client Modal */}
+      {editingClient && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg w-full max-w-md shadow-xl">
             <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-900">
-                {editingClient ? 'Edit Client' : 'Add New Client'}
+                Edit Client
               </h3>
               <button
                 onClick={() => {
-                  setShowAddModal(false);
                   setEditingClient(null);
                   setFormData({ name: '', email: '', phone: '', address: '', collectionDay: '', status: 'Active' });
                 }}
@@ -341,7 +321,7 @@ export default function ClientManagement() {
 
             <form onSubmit={(e) => {
               e.preventDefault();
-              editingClient ? handleUpdateClient() : handleAddClient();
+              handleUpdateClient();
             }} className="px-6 py-4 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
@@ -364,7 +344,7 @@ export default function ClientManagement() {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 text-sm"
                   placeholder="Enter email address"
-                  disabled={editingClient}
+                  disabled={true}
                 />
               </div>
 
@@ -403,25 +383,22 @@ export default function ClientManagement() {
                 />
               </div>
 
-              {editingClient && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                  <select
-                    value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 text-sm"
-                  >
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                </div>
-              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 text-sm"
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
 
               <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                 <button
                   type="button"
                   onClick={() => {
-                    setShowAddModal(false);
                     setEditingClient(null);
                     setFormData({ name: '', email: '', phone: '', address: '', collectionDay: '', status: 'Active' });
                   }}
@@ -434,7 +411,7 @@ export default function ClientManagement() {
                   className="px-4 py-2 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-lg transition-colors"
                 >
                   <Save className="w-4 h-4 mr-2 inline" />
-                  {editingClient ? 'Update Client' : 'Add Client'}
+                  Update Client
                 </button>
               </div>
             </form>

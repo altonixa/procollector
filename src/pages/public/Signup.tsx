@@ -57,19 +57,19 @@ export function Signup() {
         try {
             // Simulate API call to create demo request
             await new Promise(resolve => setTimeout(resolve, 2000));
-            
+
             // In production, this would call an API to create a demo request
             // For now, we'll simulate sending credentials via email
             setSuccess(`Demo request submitted successfully!
                         Demo credentials have been sent to ${email}.
                         Please check your email and follow the instructions to access your demo portal.`);
-            
+
             // Clear form
             setSubdomain("");
             setEmail("");
             setPassword("");
             setConfirmPassword("");
-            
+
         } catch (err) {
             setError("Something went wrong. Please try again.");
         } finally {
@@ -89,7 +89,7 @@ export function Signup() {
 
                 <div className="relative z-10 flex items-center gap-3">
                     <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity group">
-                        <div className="flex h-10 w-10 items-center justify-center rounded bg-brand-green font-bold text-white shadow-lg shadow-brand-green/30 px-0">P</div>
+                        <div className="flex h-10 w-10 items-center justify-center rounded bg-brand-green font-bold text-white shadow-sm px-0">P</div>
                         <span className="text-2xl font-bold tracking-tight">ProCollector</span>
                     </Link>
                 </div>
@@ -231,7 +231,7 @@ export function Signup() {
                                     <Button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="w-full h-14 text-lg shadow-lg shadow-brand-green/20"
+                                        className="w-full h-14 text-lg shadow-sm"
                                     >
                                         {isSubmitting ? "Processing..." : "Request Demo Access"}
                                     </Button>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Outlet, useSearchParams } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
@@ -38,6 +38,7 @@ import { Reports } from './pages/organization/Reports';
 import { TransportModule } from './pages/organization/modules/TransportModule';
 import { HostelModule } from './pages/organization/modules/HostelModule';
 import { InventoryModule } from './pages/organization/modules/InventoryModule';
+import { Branches } from './pages/organization/Branches';
 
 // Collector Portal Pages
 import FieldCollection from './pages/collector/FieldCollection';
@@ -55,10 +56,14 @@ import CollectorProfile from './pages/collector/CollectorProfile';
 import { ClientPortal } from './pages/client/ClientPortal';
 import { ReceiptVerification } from './pages/client/ReceiptVerification';
 
+// Manager Portal Pages
+import { ManagerPortal } from './pages/manager/ManagerPortal';
+import { Agents } from './pages/manager/Agents';
+import LiveMonitoring from './pages/manager/LiveMonitoring';
+import { Collectors } from './pages/manager/Collectors';
+
 // Supervisor Portal Pages
-import { SupervisorPortal } from './pages/supervisor/SupervisorPortal';
-import { Agents } from './pages/supervisor/Agents';
-import LiveMonitoring from './pages/supervisor/LiveMonitoring';
+import SupervisorPortal from './pages/supervisor/SupervisorPortal';
 
 
 // Layout for the Protected App (Dashboard)
@@ -78,24 +83,6 @@ function DashboardLayout() {
   );
 }
 
-// Demo Access Wrapper Component
-function DemoAccessWrapper({ children, role }: { children: React.ReactNode; role: string }) {
-  const { setDemoUser, user } = useAuth();
-  const [searchParams] = useSearchParams();
-  const hasSetDemoUserRef = useRef(false);
-
-  // Set demo user on mount if not already authenticated
-  useEffect(() => {
-    // Only set demo user once and if user is not already set
-    if (!hasSetDemoUserRef.current && !user) {
-      hasSetDemoUserRef.current = true;
-      const orgName = searchParams.get('org') || 'Demo Organization';
-      setDemoUser(orgName, role as any);
-    }
-  }, []); // Empty dependency array - run only once on mount
-
-  return <>{children}</>;
-}
 
 function App() {
   return (
@@ -119,46 +106,6 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
           </Route>
 
-          {/* Demo Routes - Allow access without authentication */}
-          <Route path="/demo-admin" element={<DemoAccessWrapper role="admin"><DashboardLayout /></DemoAccessWrapper>}>
-            <Route index element={<ProtectedRoute requiredRole="admin"><GlobalOverview /></ProtectedRoute>} />
-            <Route path="csv-import" element={<ProtectedRoute requiredRole="admin"><CSVImport /></ProtectedRoute>} />
-            <Route path="organizations" element={<ProtectedRoute requiredRole="admin"><Organizations /></ProtectedRoute>} />
-            <Route path="collections" element={<ProtectedRoute requiredRole="admin"><Collections /></ProtectedRoute>} />
-          </Route>
-
-          <Route path="/demo-organization" element={<DemoAccessWrapper role="organization"><DashboardLayout /></DemoAccessWrapper>}>
-            <Route index element={<ProtectedRoute requiredRole="organization"><OrgAdminDashboard /></ProtectedRoute>} />
-            <Route path="reports" element={<ProtectedRoute requiredRole="organization"><Reports /></ProtectedRoute>} />
-            <Route path="transport" element={<ProtectedRoute requiredRole="organization"><TransportModule /></ProtectedRoute>} />
-            <Route path="hostel" element={<ProtectedRoute requiredRole="organization"><HostelModule /></ProtectedRoute>} />
-            <Route path="inventory" element={<ProtectedRoute requiredRole="organization"><InventoryModule /></ProtectedRoute>} />
-          </Route>
-
-          <Route path="/demo-supervisor" element={<DemoAccessWrapper role="supervisor"><DashboardLayout /></DemoAccessWrapper>}>
-            <Route index element={<ProtectedRoute requiredRole="supervisor"><SupervisorPortal /></ProtectedRoute>} />
-            <Route path="agents" element={<ProtectedRoute requiredRole="supervisor"><Agents /></ProtectedRoute>} />
-            <Route path="monitoring" element={<ProtectedRoute requiredRole="supervisor"><LiveMonitoring /></ProtectedRoute>} />
-          </Route>
-
-          <Route path="/demo-collector" element={<DemoAccessWrapper role="collector"><CollectorDashboard /></DemoAccessWrapper>}>
-            <Route index element={<CollectorHome />} />
-            <Route path="add-client" element={<AddClient />} />
-            <Route path="collect" element={<FieldCollection />} />
-            <Route path="routes" element={<CollectionRoutes />} />
-            <Route path="history" element={<CollectionHistory />} />
-            <Route path="clients" element={<ClientManagement />} />
-            <Route path="reports" element={<CollectorReports />} />
-            <Route path="profile" element={<CollectorProfile />} />
-          </Route>
-          <Route path="/demo-collector/deposits" element={<DemoAccessWrapper role="collector"><DashboardLayout /></DemoAccessWrapper>}>
-            <Route index element={<ProtectedRoute requiredRole="collector"><DepositWithdrawal /></ProtectedRoute>} />
-          </Route>
-
-          <Route path="/demo-client" element={<DemoAccessWrapper role="client"><ClientPortal /></DemoAccessWrapper>} />
-          <Route path="/demo-client/verify" element={<DemoAccessWrapper role="client"><ReceiptVerification /></DemoAccessWrapper>} />
-
-          <Route path="/demo-auditor" element={<DemoAccessWrapper role="auditor"><AuditorPortal /></DemoAccessWrapper>} />
 
           {/* System Admin Portal */}
           <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><DashboardLayout /></ProtectedRoute>}>
@@ -171,6 +118,7 @@ function App() {
           {/* Organization Admin Portal */}
           <Route path="/organization" element={<ProtectedRoute requiredRole="organization"><DashboardLayout /></ProtectedRoute>}>
             <Route index element={<ProtectedRoute requiredRole="organization"><OrgAdminDashboard /></ProtectedRoute>} />
+            <Route path="branches" element={<ProtectedRoute requiredRole="organization"><Branches /></ProtectedRoute>} />
             <Route path="reports" element={<ProtectedRoute requiredRole="organization"><Reports /></ProtectedRoute>} />
             <Route path="transport" element={<ProtectedRoute requiredRole="organization"><TransportModule /></ProtectedRoute>} />
             <Route path="hostel" element={<ProtectedRoute requiredRole="organization"><HostelModule /></ProtectedRoute>} />
@@ -204,9 +152,18 @@ function App() {
           <Route path="/client" element={<ProtectedRoute requiredRole="client"><ClientPortal /></ProtectedRoute>} />
           <Route path="/client/verify" element={<ProtectedRoute requiredRole="client"><ReceiptVerification /></ProtectedRoute>} />
 
+          {/* Manager Portal */}
+          <Route path="/manager" element={<ProtectedRoute requiredRole="manager"><DashboardLayout /></ProtectedRoute>}>
+            <Route index element={<ProtectedRoute requiredRole="manager"><ManagerPortal /></ProtectedRoute>} />
+            <Route path="collectors" element={<ProtectedRoute requiredRole="manager"><Collectors /></ProtectedRoute>} />
+            <Route path="agents" element={<ProtectedRoute requiredRole="manager"><Agents /></ProtectedRoute>} />
+            <Route path="monitoring" element={<ProtectedRoute requiredRole="manager"><LiveMonitoring /></ProtectedRoute>} />
+          </Route>
+
           {/* Supervisor Portal */}
           <Route path="/supervisor" element={<ProtectedRoute requiredRole="supervisor"><DashboardLayout /></ProtectedRoute>}>
             <Route index element={<ProtectedRoute requiredRole="supervisor"><SupervisorPortal /></ProtectedRoute>} />
+            <Route path="collectors" element={<ProtectedRoute requiredRole="supervisor"><Collectors /></ProtectedRoute>} />
             <Route path="agents" element={<ProtectedRoute requiredRole="supervisor"><Agents /></ProtectedRoute>} />
             <Route path="monitoring" element={<ProtectedRoute requiredRole="supervisor"><LiveMonitoring /></ProtectedRoute>} />
           </Route>

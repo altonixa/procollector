@@ -83,7 +83,7 @@ export function DemoAccessModal({ isOpen, onClose, onSubmit }: DemoAccessModalPr
                   </li>
                   <li className="flex items-center gap-2">
                     <div className="h-2 w-2 bg-brand-green rounded-full"></div>
-                    Supervisor Portal
+                    Manager Portal
                   </li>
                   <li className="flex items-center gap-2">
                     <div className="h-2 w-2 bg-brand-green rounded-full"></div>

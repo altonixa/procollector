@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserPlus, Mail, Phone, IdCard, Home, Loader2 } from 'lucide-react';
+import { UserPlus, Mail, Phone, IdCard, Home, Loader2, Wallet } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 
 export default function AddClient() {
@@ -8,7 +8,10 @@ export default function AddClient() {
     email: '',
     phone: '',
     idCardNumber: '',
-    quarter: ''
+    quarter: '',
+    mtnMomo: '',
+    orangeMoney: '',
+    primaryPaymentMethod: 'MTN MOMO' as 'MTN MOMO' | 'Orange Money'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -32,7 +35,10 @@ export default function AddClient() {
           email: '',
           phone: '',
           idCardNumber: '',
-          quarter: ''
+          quarter: '',
+          mtnMomo: '',
+          orangeMoney: '',
+          primaryPaymentMethod: 'MTN MOMO'
         });
       }, 3000);
       
@@ -43,7 +49,7 @@ export default function AddClient() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -162,6 +168,63 @@ export default function AddClient() {
                   placeholder="e.g., Akwa Nord"
                 />
                 <Home className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" />
+              </div>
+            </div>
+
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-4">
+              <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                <Wallet className="w-5 h-5" /> Payment Methods
+              </h3>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  MTN MOMO Phone Number
+                </label>
+                <div className="relative">
+                  <input
+                    type="tel"
+                    name="mtnMomo"
+                    value={formData.mtnMomo}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="e.g., 6xxxxxxxx"
+                  />
+                  <Phone className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Orange Money Phone Number
+                </label>
+                <div className="relative">
+                  <input
+                    type="tel"
+                    name="orangeMoney"
+                    value={formData.orangeMoney}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="e.g., 6xxxxxxxx"
+                  />
+                  <Phone className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Primary Payment Method
+                </label>
+                <select
+                  name="primaryPaymentMethod"
+                  value={formData.primaryPaymentMethod}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="MTN MOMO">MTN MOMO</option>
+                  <option value="Orange Money">Orange Money</option>
+                </select>
               </div>
             </div>
 

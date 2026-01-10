@@ -1,35 +1,26 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import {
   Shield,
   Users,
-  Map,
+  MapPin,
   AlertCircle,
   BarChart3,
   LogOut,
-  UserPlus,
   Home,
   Wifi,
   WifiOff,
   Search,
-  Filter,
-  Download,
-  Trash2,
-  Edit,
-  Eye,
   Bell,
-  Calendar,
-  Clock,
-  CheckCircle,
-  XCircle
+  UserPlus
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 function CollectorDashboard() {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
-  const [isOnline, setIsOnline] = useState(true);
-  const [notifications, setNotifications] = useState([
+  const [isOnline] = useState(true);
+  const [notifications] = useState([
     { id: 1, message: 'New client assigned', read: false },
     { id: 2, message: 'Collection deadline approaching', read: true },
     { id: 3, message: 'System maintenance scheduled', read: false }
@@ -43,7 +34,7 @@ function CollectorDashboard() {
   const menuItems = [
     { icon: <Home className="w-5 h-5" />, label: 'Dashboard', path: '' },
     { icon: <Users className="w-5 h-5" />, label: 'Clients', path: 'clients' },
-    { icon: <Map className="w-5 h-5" />, label: 'Field Operations', path: 'operations' },
+    { icon: <MapPin className="w-5 h-5" />, label: 'Field Operations', path: 'operations' },
     { icon: <AlertCircle className="w-5 h-5" />, label: 'Error Box', path: 'errors' },
     { icon: <BarChart3 className="w-5 h-5" />, label: 'Performance', path: 'performance' },
   ];

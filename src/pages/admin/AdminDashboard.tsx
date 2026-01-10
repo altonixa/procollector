@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import {
   Shield,
@@ -13,8 +13,7 @@ import {
   AlertTriangle,
   Home,
   Globe,
-  Building2,
-  Activity
+  Building2
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import DashboardHome from './DashboardHome';
@@ -24,13 +23,13 @@ import Reports from './Reports';
 import SmtpConfig from './SmtpConfig';
 import ErrorManagement from './ErrorManagement';
 import AdminSettings from './AdminSettings';
-import GlobalOverview from './GlobalOverview';
+import { GlobalOverview } from './GlobalOverview';
 import Organizations from './Organizations';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
-  const [notifications, setNotifications] = useState([
+  const [notifications] = useState([
     // This will be replaced with real data from API
     { id: 1, message: 'Loading notifications...', read: false },
   ]);
@@ -71,9 +70,9 @@ export default function AdminDashboard() {
               <li key={index}>
                 <Link
                   to={item.path}
-                  className="flex items-center space-x-3 text-brand-slate-600 px-3 py-2 rounded-lg hover:bg-brand-slate-50 hover:text-brand-dark transition-all text-sm font-medium group"
+                  className="flex items-center space-x-3 text-brand-slate-600 px-3 py-2 rounded-lg hover:bg-brand-slate-50 hover:text-brand-dark transition-colors text-sm font-medium"
                 >
-                  <span className="group-hover:scale-110 transition-transform">{item.icon}</span>
+                  {item.icon}
                   <span>{item.label}</span>
                 </Link>
               </li>
@@ -133,31 +132,28 @@ export default function AdminDashboard() {
             <Route path="errors" element={<ErrorManagement />} />
             <Route path="settings" element={<AdminSettings />} />
             <Route path="profile" element={
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h1 className="text-2xl font-bold text-gray-900">Admin Profile</h1>
+              <div className="space-y-4">
+                <div>
+                  <h1 className="text-xl font-bold text-gray-900">Admin Profile</h1>
+                  <p className="text-sm text-gray-600 mt-1">System administrator information</p>
                 </div>
-                <div className="bg-black text-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                  <div className="space-y-4">
+                <div className="bg-white p-5 rounded-lg border border-gray-200">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
-                      <p className="text-white font-semibold">{user?.name || 'Admin User'}</p>
+                      <label className="block text-xs font-medium text-gray-500 mb-1">Full Name</label>
+                      <p className="text-gray-900 font-medium">{user?.name || 'Admin User'}</p>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
-                      <p className="text-white font-semibold">{user?.email || 'admin@example.com'}</p>
+                      <label className="block text-xs font-medium text-gray-500 mb-1">Email Address</label>
+                      <p className="text-gray-900 font-medium">{user?.email || 'admin@example.com'}</p>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">Role</label>
-                      <p className="text-white font-semibold">{user?.role || 'System Administrator'}</p>
+                      <label className="block text-xs font-medium text-gray-500 mb-1">Role</label>
+                      <p className="text-gray-900 font-medium">{user?.role || 'System Administrator'}</p>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">Organization</label>
-                      <p className="text-white font-semibold">{user?.organizationName || 'Procollector System'}</p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">Last Login</label>
-                      <p className="text-white font-semibold">Today at {new Date().toLocaleTimeString()}</p>
+                      <label className="block text-xs font-medium text-gray-500 mb-1">Organization</label>
+                      <p className="text-gray-900 font-medium">{user?.organizationName || 'Procollector System'}</p>
                     </div>
                   </div>
                 </div>

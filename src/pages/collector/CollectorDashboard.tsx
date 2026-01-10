@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Routes, Route, NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Shield,
   Wallet,
@@ -58,7 +58,7 @@ export default function CollectorDashboard() {
     }
   }, [location.pathname, isMobile]);
 
-  const [notifications, setNotifications] = useState([
+  const [notifications] = useState([
     { id: 1, message: 'New collection route assigned', read: false },
     { id: 2, message: 'Payment received confirmation', read: true },
     { id: 3, message: 'Client schedule updated', read: false }
@@ -81,7 +81,7 @@ export default function CollectorDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50">
       {/* Mobile Overlay */}
       {sidebarOpen && isMobile && (
         <div
@@ -91,9 +91,8 @@ export default function CollectorDashboard() {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}>
         {/* Header */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
           <div className="flex items-center space-x-3">
@@ -111,20 +110,19 @@ export default function CollectorDashboard() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6">
+        <nav className="flex-1 px-4 py-6 overflow-y-auto">
           <ul className="space-y-2">
             {menuItems.map((item, index) => (
               <li key={index}>
                 <NavLink
                   to={item.path}
                   end={item.path === ''}
-                  className={({ isActive }) => `flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-gray-900 text-white'
-                      : isMobile
-                        ? 'text-gray-700' // No hover effects on mobile
-                        : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                  }`}
+                  className={({ isActive }) => `flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${isActive
+                    ? 'bg-gray-900 text-white'
+                    : isMobile
+                      ? 'text-gray-700' // No hover effects on mobile
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
                 >
                   {item.icon}
                   <span>{item.label}</span>
@@ -147,11 +145,10 @@ export default function CollectorDashboard() {
           </div>
           <button
             onClick={handleLogout}
-            className={`w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-              isMobile
-                ? 'text-gray-700 bg-gray-100' // Solid on mobile
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
+            className={`w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isMobile
+              ? 'text-gray-700 bg-gray-100' // Solid on mobile
+              : 'text-gray-700 hover:bg-gray-100'
+              }`}
           >
             <LogOut className="h-4 w-4" />
             <span>Logout</span>
@@ -160,7 +157,7 @@ export default function CollectorDashboard() {
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen lg:ml-0">
+      <div className="flex-1 flex flex-col min-h-screen">
         {/* Top Navigation */}
         <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
           <div className="flex items-center justify-between px-4 py-3 lg:px-6">
@@ -187,11 +184,10 @@ export default function CollectorDashboard() {
             {/* Right: Profile & Notifications */}
             <div className="flex items-center space-x-4">
               {/* Notifications */}
-              <button className={`relative p-2 rounded-lg transition-colors ${
-                isMobile
-                  ? 'text-gray-600 bg-gray-100' // Solid on mobile
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-              }`}>
+              <button className={`relative p-2 rounded-lg transition-colors ${isMobile
+                ? 'text-gray-600 bg-gray-100' // Solid on mobile
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}>
                 <Bell className="w-5 h-5" />
                 {notifications.filter(n => !n.read).length > 0 && (
                   <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -208,7 +204,7 @@ export default function CollectorDashboard() {
               </div>
 
               {/* Profile */}
-              <div className="flex items-center space-x-3">
+              <Link to="profile" className="flex items-center space-x-3 hover:bg-gray-100 rounded-lg p-2 -m-2 transition-colors">
                 <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
                   <User className="h-5 w-5 text-gray-600" />
                 </div>
@@ -216,7 +212,7 @@ export default function CollectorDashboard() {
                   <p className="text-sm font-medium text-gray-900">{user?.name || 'User'}</p>
                   <p className="text-xs text-gray-500">Collector</p>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
         </header>

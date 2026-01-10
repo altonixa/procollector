@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { Card } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
-import { Bed, Users, Settings, Plus, ChevronRight, ShieldCheck, PieChart } from 'lucide-react';
-import { cn } from '../../../lib/utils';
+import { Bed, Users, Settings, Plus, ShieldCheck, PieChart } from 'lucide-react';
 
 export function HostelModule() {
     const [activeTab, setActiveTab] = useState<'rooms' | 'residents' | 'maintenance'>('rooms');
@@ -53,11 +51,10 @@ export function HostelModule() {
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-                                activeTab === tab
+                            className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === tab
                                     ? 'border-gray-900 text-gray-900'
                                     : 'border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                            }`}
+                                }`}
                         >
                             {tab.charAt(0).toUpperCase() + tab.slice(1)}
                         </button>
@@ -75,7 +72,7 @@ export function HostelModule() {
 
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                                <thead>
+                            <thead>
                                 <tr className="bg-gray-50 border-b border-gray-200">
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Room</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Type</th>

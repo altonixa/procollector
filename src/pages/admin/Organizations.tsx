@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Building2, Users, Eye, Edit, Trash2, Search, Plus } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 
 export default function Organizations() {
-  const [organizations, setOrganizations] = useState([
+  const [organizations] = useState([
     {
       id: 1,
       name: 'Douala City Council',

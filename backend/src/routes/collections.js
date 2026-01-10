@@ -112,7 +112,7 @@ router.get('/',
 // @desc    Create a new collection
 // @access  Private (Collector)
 router.post('/',
-    authorize('collector', 'supervisor', 'organization', 'admin'),
+    authorize('collector', 'Manager', 'organization', 'admin'),
     collectionLimiter,
     [
         body('clientId').isUUID().withMessage('Valid client ID is required'),
@@ -213,9 +213,9 @@ router.post('/',
 
 // @route   PATCH /api/v1/collections/:id/verify
 // @desc    Verify a collection
-// @access  Private (Supervisor, Organization, Admin)
+// @access  Private (Manager, Organization, Admin)
 router.patch('/:id/verify',
-    authorize('supervisor', 'organization', 'admin'),
+    authorize('Manager', 'organization', 'admin'),
     async (req, res) => {
         try {
             const collection = await Collection.findOne({
@@ -260,9 +260,9 @@ router.patch('/:id/verify',
 
 // @route   PATCH /api/v1/collections/:id/reject
 // @desc    Reject a collection
-// @access  Private (Supervisor, Organization, Admin)
+// @access  Private (Manager, Organization, Admin)
 router.patch('/:id/reject',
-    authorize('supervisor', 'organization', 'admin'),
+    authorize('Manager', 'organization', 'admin'),
     [body('reason').notEmpty().withMessage('Rejection reason is required')],
     async (req, res) => {
         try {

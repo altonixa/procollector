@@ -129,7 +129,7 @@ Manages everything inside a specific organization (e.g., a council, bank, compan
 * Create and manage:
 
   * Agents / Collectors
-  * Supervisors
+  * Managers
   * Branches / Zones
   * Collection categories
 * Assign collectors to zones or clients
@@ -146,11 +146,11 @@ Manages everything inside a specific organization (e.g., a council, bank, compan
 * Finance managers
 * Operations managers
 * Council revenue officers
-* Bank supervisors
+* Bank Managers
 
 ---
 
-## 5.3 Supervisor / Manager Portal
+## 5.3 Manager / Manager Portal
 
 ### Purpose
 
@@ -167,7 +167,7 @@ Provides middle-level oversight of field collectors.
 
 ### Who Uses It
 
-* Field supervisors
+* Field Managers
 * Area managers
 
 ---

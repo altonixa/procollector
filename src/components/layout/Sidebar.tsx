@@ -13,34 +13,90 @@ import {
     Bus,
     Home,
     Package,
-    Activity
+    Activity,
+    TrendingUp,
+    MapPin,
+    Navigation,
+    Clock,
+    User
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/Button';
 import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface SidebarProps {
     className?: string;
 }
 
-const navItems = [
-    { icon: LayoutDashboard, label: 'Org Dashboard', to: '/organization', end: true },
-    { icon: Eye, label: 'Supervisor', to: '/supervisor' },
-    { icon: Activity, label: 'Live Map', to: '/supervisor/monitoring' },
-    { icon: Bus, label: 'Transport', to: '/organization/transport' },
-    { icon: Home, label: 'Hostel', to: '/organization/hostel' },
-    { icon: Package, label: 'Inventory', to: '/organization/inventory' },
-    { icon: FileText, label: 'Reports', to: '/organization/reports' },
-    { icon: Users, label: 'Agents', to: '/supervisor/agents' },
-    { icon: Building2, label: 'System Admin', to: '/admin' },
-    { icon: PiggyBank, label: 'Deposits', to: '/collector/deposits' },
-    { icon: Wallet, label: 'Client Portal', to: '/client' },
-    { icon: Settings, label: 'Settings', to: '/dashboard/settings' },
-];
+const navItemsMap = {
+    admin: [
+        { icon: Building2, label: 'System Admin', to: '/admin' },
+        { icon: Users, label: 'Organizations', to: '/admin/organizations' },
+        { icon: FileText, label: 'Collections', to: '/admin/collections' },
+        { icon: PiggyBank, label: 'CSV Import', to: '/admin/csv-import' },
+        { icon: TrendingUp, label: 'Reports', to: '/admin/reports' },
+        { icon: Settings, label: 'Settings', to: '/dashboard/settings' },
+    ],
+    organization: [
+        { icon: LayoutDashboard, label: 'Org Dashboard', to: '/organization' },
+        { icon: Building2, label: 'Branches', to: '/organization/branches' },
+        { icon: Bus, label: 'Transport', to: '/organization/transport' },
+        { icon: Home, label: 'Hostel', to: '/organization/hostel' },
+        { icon: Package, label: 'Inventory', to: '/organization/inventory' },
+        { icon: FileText, label: 'Reports', to: '/organization/reports' },
+        { icon: Settings, label: 'Settings', to: '/dashboard/settings' },
+    ],
+    manager: [
+        { icon: Eye, label: 'Manager', to: '/manager' },
+        { icon: LayoutDashboard, label: 'Organization', to: '/organization' },
+        { icon: Users, label: 'Collectors', to: '/manager/collectors' },
+        { icon: Users, label: 'Agents', to: '/manager/agents' },
+        { icon: Activity, label: 'Monitor', to: '/manager/monitoring' },
+        { icon: Bus, label: 'Transport', to: '/organization/transport' },
+        { icon: Home, label: 'Hostel', to: '/organization/hostel' },
+        { icon: Package, label: 'Inventory', to: '/organization/inventory' },
+        { icon: FileText, label: 'Reports', to: '/organization/reports' },
+        { icon: Settings, label: 'Settings', to: '/dashboard/settings' },
+    ],
+    collector: [
+        { icon: LayoutDashboard, label: 'Dashboard', to: '/collector' },
+        { icon: Users, label: 'Add Client', to: '/collector/add-client' },
+        { icon: MapPin, label: 'Field Collection', to: '/collector/collect' },
+        { icon: Navigation, label: 'Routes', to: '/collector/routes' },
+        { icon: Clock, label: 'History', to: '/collector/history' },
+        { icon: Users, label: 'Clients', to: '/collector/clients' },
+        { icon: FileText, label: 'Reports', to: '/collector/reports' },
+        { icon: User, label: 'Profile', to: '/collector/profile' },
+        { icon: PiggyBank, label: 'Deposits', to: '/collector/deposits' },
+    ],
+    client: [
+        { icon: Wallet, label: 'Client Portal', to: '/client' },
+        { icon: FileText, label: 'Receipt Verification', to: '/client/verify' },
+    ],
+    auditor: [
+        { icon: FileText, label: 'Auditor Portal', to: '/auditor' },
+    ],
+    supervisor: [
+        { icon: Eye, label: 'Supervisor', to: '/supervisor' },
+        { icon: LayoutDashboard, label: 'Organization', to: '/organization' },
+        { icon: Users, label: 'Collectors', to: '/supervisor/collectors' },
+        { icon: Users, label: 'Agents', to: '/supervisor/agents' },
+        { icon: Activity, label: 'Monitor', to: '/supervisor/monitoring' },
+        { icon: Bus, label: 'Transport', to: '/organization/transport' },
+        { icon: Home, label: 'Hostel', to: '/organization/hostel' },
+        { icon: Package, label: 'Inventory', to: '/organization/inventory' },
+        { icon: FileText, label: 'Reports', to: '/organization/reports' },
+        { icon: Settings, label: 'Settings', to: '/dashboard/settings' },
+    ],
+};
+
 
 export function Sidebar({ className }: SidebarProps) {
     const [collapsed, setCollapsed] = useState(false);
+    const { user } = useAuth();
+    const navItems = navItemsMap[user?.role as keyof typeof navItemsMap] || [];
 
     return (
         <div className={cn(
@@ -64,12 +120,11 @@ export function Sidebar({ className }: SidebarProps) {
                     <NavLink
                         key={item.label}
                         to={item.to}
-                        end={item.end}
                         className={({ isActive }) => cn(
                             "flex items-center gap-3 px-3 py-2 rounded-md transition-colors duration-200",
                             isActive
-                                ? "bg-brand-slate-100 text-brand-dark border-r-2 border-brand-dark"
-                                : "text-gray-700 hover:text-brand-dark hover:bg-gray-50"
+                                ? "bg-black text-white"
+                                : "text-gray-700 hover:text-gray-900"
                         )}
                     >
                         {({ isActive }) => (

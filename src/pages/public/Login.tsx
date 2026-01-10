@@ -1,26 +1,45 @@
 import { Button } from "../../components/ui/Button";
-import { Link, useNavigate  } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ShieldCheck, ArrowLeft, User, Users, Eye, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
 export function Login() {
-    const [subdomain, setSubdomain] = useState("");
+    const [selectedPortal, setSelectedPortal] = useState<string | null>(null);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const { login, isLoading, setDemoUser } = useAuth();
+    const { login, isLoading, setDemoUser, user } = useAuth();
     const navigate = useNavigate();
+
+    // Map roles to production routes
+    const getProductionRoute = (role: string): string => {
+        const productionRoutes: { [key: string]: string } = {
+            'organization': '/organization',
+            'manager': '/manager',
+            'supervisor': '/supervisor',
+            'collector': '/collector',
+            'client': '/client',
+            'auditor': '/auditor'
+        };
+        return productionRoutes[role] || '/dashboard';
+    };
+
+    // Demo credentials for each portal
+    const demoCredentials: { [key: string]: { email: string; password: string } } = {
+        'organization': { email: 'organization@demo.com', password: 'demodemo' },
+        'manager': { email: 'manager@demo.com', password: 'demodemo' },
+        'supervisor': { email: 'supervisor@demo.com', password: 'demodemo' },
+        'collector': { email: 'collector@demo.com', password: 'demodemo' },
+        'client': { email: 'client@demo.com', password: 'demodemo' },
+        'auditor': { email: 'auditor@demo.com', password: 'demodemo' }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
 
         // Validate inputs
-        if (!subdomain.trim()) {
-            setError("Organization subdomain is required");
-            return;
-        }
         if (!email.trim()) {
             setError("Email is required");
             return;
@@ -34,33 +53,30 @@ export function Login() {
             return;
         }
 
-        // Attempt login
-        const success = await login(email, password, subdomain);
-        if (success) {
-            navigate("/dashboard");
-        } else {
-            setError("Invalid credentials. Please try again. (Demo: use any credentials)");
+        // Check for demo credentials
+        const demoCred = demoCredentials[selectedPortal!];
+        if (demoCred && email === demoCred.email && password === demoCred.password) {
+            setDemoUser('Demo Organization', selectedPortal as any);
+            const productionRoute = getProductionRoute(selectedPortal!);
+            navigate(productionRoute + `?org=Demo Organization`);
+            return;
         }
-    };
 
-    const handleDemoLogin = (role: string, orgName: string) => {
-        setDemoUser(orgName, role as any);
-        // Navigate to the appropriate demo route
-        const demoRoutes: { [key: string]: string } = {
-            'admin': '/demo-admin',
-            'organization': '/demo-organization',
-            'supervisor': '/demo-supervisor',
-            'collector': '/demo-collector',
-            'client': '/demo-client',
-            'auditor': '/demo-auditor'
-        };
-        navigate(demoRoutes[role] + `?org=${encodeURIComponent(orgName)}`);
+        // Attempt login
+        const success = await login(email, password, '');
+        if (success) {
+            // Route to the selected portal
+            const productionRoute = getProductionRoute(selectedPortal!);
+            navigate(productionRoute);
+        } else {
+            setError("Invalid credentials. Demo: use [portal]@demo.com / demodemo (e.g., organization@demo.com)");
+        }
     };
 
 
     return (
-        <div className="min-h-screen bg-brand-slate-50 flex items-center justify-center p-8">
-            <div className="w-full max-w-md space-y-12">
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-sm space-y-8">
                 <div className="space-y-4">
                     <div>
                         <Link to="/" className="inline-flex items-center text-sm font-medium text-brand-slate-500 hover:text-brand-green transition-colors">
@@ -68,75 +84,74 @@ export function Login() {
                         </Link>
                     </div>
                     <h3 className="text-3xl font-extrabold text-brand-dark">Sign in</h3>
-                    <p className="text-brand-slate-500 font-medium">Please enter your credentials to access your portal.</p>
+                    <p className="text-brand-slate-500 font-medium">Choose your portal and enter your credentials.</p>
                 </div>
 
-                {/* Demo Quick Access */}
-                <div className="border-t border-brand-slate-50 pt-8">
-                    <h4 className="text-sm font-bold text-brand-dark/60 uppercase tracking-widest mb-4">Or Try Demo Access</h4>
-                    <div className="grid grid-cols-2 gap-3">
-                        <button
-                            onClick={() => handleDemoLogin('organization', 'Demo Organization')}
-                            className="p-4 border border-brand-green/30 rounded-lg hover:bg-brand-green/5 transition-colors text-left"
-                        >
-                            <div className="flex items-center gap-2 mb-2">
-                                <Users className="h-4 w-4 text-brand-green" />
-                                <span className="text-xs font-bold">Organization</span>
-                            </div>
-                            <div className="text-xs text-brand-dark/60">Admin Portal</div>
-                        </button>
+                {!selectedPortal && (
+                    <div className="border-t border-brand-slate-50 pt-8">
+                        <h4 className="text-sm font-bold text-brand-dark/60 uppercase tracking-widest mb-4">Select Portal</h4>
+                        <div className="grid grid-cols-2 gap-3">
+                            <button
+                                onClick={() => setSelectedPortal('organization')}
+                                className="p-4 border border-brand-green/30 rounded-lg hover:bg-brand-green/5 transition-colors text-left"
+                            >
+                                <div className="flex items-center gap-2 mb-2">
+                                    <Users className="h-4 w-4 text-brand-green" />
+                                    <span className="text-xs font-bold">Organization</span>
+                                </div>
+                                <div className="text-xs text-brand-dark/60">Admin Portal</div>
+                            </button>
 
-                        <button
-                            onClick={() => handleDemoLogin('supervisor', 'Demo Organization')}
-                            className="p-4 border border-brand-green/30 rounded-lg hover:bg-brand-green/5 transition-colors text-left"
-                        >
-                            <div className="flex items-center gap-2 mb-2">
-                                <Eye className="h-4 w-4 text-brand-green" />
-                                <span className="text-xs font-bold">Supervisor</span>
-                            </div>
-                            <div className="text-xs text-brand-dark/60">Field Monitoring</div>
-                        </button>
+                            <button
+                                onClick={() => setSelectedPortal('manager')}
+                                className="p-4 border border-brand-green/30 rounded-lg hover:bg-brand-green/5 transition-colors text-left"
+                            >
+                                <div className="flex items-center gap-2 mb-2">
+                                    <Eye className="h-4 w-4 text-brand-green" />
+                                    <span className="text-xs font-bold">Manager</span>
+                                </div>
+                                <div className="text-xs text-brand-dark/60">Field Monitoring</div>
+                            </button>
 
-                        <button
-                            onClick={() => handleDemoLogin('collector', 'Demo Organization')}
-                            className="p-4 border border-brand-green/30 rounded-lg hover:bg-brand-green/5 transition-colors text-left"
-                        >
-                            <div className="flex items-center gap-2 mb-2">
-                                <ShoppingCart className="h-4 w-4 text-brand-green" />
-                                <span className="text-xs font-bold">Collector</span>
-                            </div>
-                            <div className="text-xs text-brand-dark/60">Field Collection</div>
-                        </button>
+                            <button
+                                onClick={() => setSelectedPortal('supervisor')}
+                                className="p-4 border border-brand-green/30 rounded-lg hover:bg-brand-green/5 transition-colors text-left"
+                            >
+                                <div className="flex items-center gap-2 mb-2">
+                                    <Eye className="h-4 w-4 text-brand-green" />
+                                    <span className="text-xs font-bold">Supervisor</span>
+                                </div>
+                                <div className="text-xs text-brand-dark/60">Field Supervision</div>
+                            </button>
 
-                        <button
-                            onClick={() => handleDemoLogin('client', 'Demo Organization')}
-                            className="p-4 border border-brand-green/30 rounded-lg hover:bg-brand-green/5 transition-colors text-left"
-                        >
-                            <div className="flex items-center gap-2 mb-2">
-                                <User className="h-4 w-4 text-brand-green" />
-                                <span className="text-xs font-bold">Client</span>
-                            </div>
-                            <div className="text-xs text-brand-dark/60">Payment Tracking</div>
-                        </button>
-                    </div>
-                </div>
+                            <button
+                                onClick={() => setSelectedPortal('collector')}
+                                className="p-4 border border-brand-green/30 rounded-lg hover:bg-brand-green/5 transition-colors text-left"
+                            >
+                                <div className="flex items-center gap-2 mb-2">
+                                    <ShoppingCart className="h-4 w-4 text-brand-green" />
+                                    <span className="text-xs font-bold">Collector</span>
+                                </div>
+                                <div className="text-xs text-brand-dark/60">Field Collection</div>
+                            </button>
 
-                <form className="space-y-8" onSubmit={handleSubmit}>
-                    <div className="space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-wider text-brand-slate-500">Subdomain / Organization</label>
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    value={subdomain}
-                                    onChange={(e) => setSubdomain(e.target.value)}
-                                    className="w-full border-b-2 border-brand-slate-200 focus:border-brand-green py-3 text-lg font-medium focus:outline-none transition-colors"
-                                    placeholder="your-org"
-                                    disabled={isLoading}
-                                />
-                                <span className="absolute right-0 top-3 text-brand-slate-300 font-bold">.procollector.com</span>
-                            </div>
+                            <button
+                                onClick={() => setSelectedPortal('client')}
+                                className="p-4 border border-brand-green/30 rounded-lg hover:bg-brand-green/5 transition-colors text-left"
+                            >
+                                <div className="flex items-center gap-2 mb-2">
+                                    <User className="h-4 w-4 text-brand-green" />
+                                    <span className="text-xs font-bold">Client</span>
+                                </div>
+                                <div className="text-xs text-brand-dark/60">Payment Tracking</div>
+                            </button>
                         </div>
+                    </div>
+                )}
+
+                {selectedPortal && (
+                    <form className="space-y-8" onSubmit={handleSubmit}>
+                    <div className="space-y-6">
                         <div className="space-y-2">
                             <label className="text-xs font-bold uppercase tracking-wider text-brand-slate-500">Email Address</label>
                             <input
@@ -174,7 +189,7 @@ export function Login() {
                         <Button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full h-14 text-lg shadow-lg shadow-brand-green/20"
+                            className="w-full h-14 text-lg shadow-sm"
                         >
                             {isLoading ? "Signing in..." : "Sign In to Dashboard"}
                         </Button>
@@ -183,8 +198,9 @@ export function Login() {
                         </p>
                     </div>
                 </form>
+               )}
 
-                <div className="pt-20 border-t border-brand-slate-50 flex items-center justify-center gap-3 grayscale opacity-30">
+               <div className="pt-20 border-t border-brand-slate-50 flex items-center justify-center gap-3 grayscale opacity-30">
                     <ShieldCheck className="h-5 w-5" />
                     <span className="text-xs font-bold tracking-widest uppercase">Verified Secure</span>
                 </div>

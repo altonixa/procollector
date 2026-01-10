@@ -144,7 +144,7 @@ export function Features() {
             ]
         },
         {
-            category: "Supervisory Control",
+            category: "Managery Control",
             icon: Eye,
             color: "from-indigo-500 to-purple-600",
             items: [

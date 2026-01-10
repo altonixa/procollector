@@ -6,9 +6,7 @@ import {
   Eye,
   ShoppingCart,
   User,
-  Shield,
   ArrowLeft,
-  ChevronRight,
   AlertCircle,
   CheckCircle,
 } from 'lucide-react';
@@ -35,13 +33,13 @@ const portals = [
     demoRoute: '/demo-organization'
   },
   {
-    id: 'supervisor',
-    title: 'Supervisor Portal',
+    id: 'Manager',
+    title: 'Manager Portal',
     description: 'Real-time monitoring of field collectors and performance',
     icon: Eye,
     color: 'from-amber-500 to-amber-600',
     features: ['Real-time Tracking', 'Agent Monitoring', 'Performance Alerts', 'Activity Logs'],
-    demoRoute: '/demo-supervisor'
+    demoRoute: '/demo-Manager'
   },
   {
     id: 'collector',
@@ -60,15 +58,6 @@ const portals = [
     color: 'from-cyan-500 to-cyan-600',
     features: ['Payment History', 'Account Statements', 'Receipt Verification', 'Dispute Tracking'],
     demoRoute: '/demo-client'
-  },
-  {
-    id: 'auditor',
-    title: 'Auditor Portal',
-    description: 'Read-only access to transactions and compliance audit trails',
-    icon: Shield,
-    color: 'from-rose-500 to-rose-600',
-    features: ['Transaction Logs', 'Audit Trails', 'Hash Verification', 'Anomaly Detection'],
-    demoRoute: '/demo-auditor'
   }
 ];
 
@@ -141,32 +130,27 @@ export function DemoLanding() {
             return (
               <Card
                 key={portal.id}
-                className="group border-brand-dark/50 hover:border-brand-green/50 transition-all duration-300 hover:shadow-2xl hover:shadow-brand-green/10 overflow-hidden"
+                className="border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all"
               >
-                {/* Gradient Header */}
-                <div className={`h-24 bg-gradient-to-br ${portal.color} relative overflow-hidden`}>
-                  <div className="absolute inset-0 opacity-10">
-                    <Icon className="h-32 w-32 text-white absolute -top-8 -right-8 group-hover:scale-110 transition-transform duration-300" />
-                  </div>
-                  <div className="relative h-full flex items-center px-6">
-                    <div className="h-12 w-12 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Icon className="h-6 w-6 text-white" />
-                    </div>
+                {/* Simple Icon Header */}
+                <div className="p-6 border-b border-gray-100">
+                  <div className="h-12 w-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <Icon className="h-6 w-6 text-gray-700" />
                   </div>
                 </div>
 
                 <CardHeader>
-                  <CardTitle className="text-xl">{portal.title}</CardTitle>
-                  <CardDescription className="text-base">{portal.description}</CardDescription>
+                  <CardTitle className="text-lg">{portal.title}</CardTitle>
+                  <CardDescription className="text-sm">{portal.description}</CardDescription>
                 </CardHeader>
 
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4">
                   {/* Features List */}
                   <div className="space-y-2">
                     {portal.features.map((feature) => (
-                      <div key={feature} className="flex items-start gap-3">
-                        <div className="h-1.5 w-1.5 bg-brand-green rounded-full mt-2 flex-shrink-0"></div>
-                        <span className="text-sm font-medium text-brand-dark/70">{feature}</span>
+                      <div key={feature} className="flex items-start gap-2">
+                        <div className="h-1.5 w-1.5 bg-gray-400 rounded-full mt-1.5 flex-shrink-0"></div>
+                        <span className="text-sm text-gray-600">{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -176,9 +160,8 @@ export function DemoLanding() {
                     to={`/signup?demo=${portal.id}&org=${encodeURIComponent(orgName)}`}
                     className="block"
                   >
-                    <Button className="w-full h-12 group-hover:bg-brand-green group-hover:shadow-lg group-hover:shadow-brand-green/30">
+                    <Button className="w-full h-10 bg-gray-900 hover:bg-gray-800 text-sm">
                       Request Demo Access
-                      <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </Link>
                 </CardContent>
@@ -244,12 +227,12 @@ export function DemoLanding() {
           </p>
           <div className="flex gap-4 justify-center">
             <Link to="/contact">
-              <Button className="h-14 px-8 text-lg bg-brand-green hover:bg-brand-green/90 shadow-lg shadow-brand-green/30">
+              <Button className="h-12 px-6 text-base bg-gray-900 hover:bg-gray-800">
                 Contact Sales
               </Button>
             </Link>
             <Link to="/signup">
-              <Button variant="outline" className="h-14 px-8 text-lg">
+              <Button variant="outline" className="h-12 px-6 text-base border-gray-300 hover:bg-gray-100">
                 Request Demo Access
               </Button>
             </Link>

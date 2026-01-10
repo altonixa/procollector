@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { BarChart3, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
 
 export default function DashboardHome() {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchDashboardData();
@@ -65,7 +65,7 @@ export default function DashboardHome() {
       
       {/* Stats Grid - Solid Design */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        {stats.map((stat, index) => (
+        {stats.map((stat: any, index: number) => (
           <div key={index} className="bg-white rounded-lg border border-brand-slate-200 p-4 shadow-sm">
             <h3 className="text-xs font-medium text-brand-slate-600 uppercase tracking-wide mb-2">{stat.label}</h3>
             <p className="text-xl font-bold text-brand-dark mb-2">{stat.value}</p>
@@ -86,7 +86,7 @@ export default function DashboardHome() {
           <h2 className="text-base font-semibold text-brand-dark">Recent Activity</h2>
         </div>
         <div className="divide-y divide-brand-slate-100">
-          {recentActivity.map((activity) => (
+          {recentActivity.map((activity: any) => (
             <div key={activity.id} className="px-4 py-3">
               <div className="flex items-center justify-between">
                 <div className="flex-1">

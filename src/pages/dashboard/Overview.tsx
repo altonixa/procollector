@@ -29,7 +29,7 @@ export function Overview() {
 
   const fetchDashboardData = async () => {
     try {
-      setLoading(true);
+      // setLoading is undefined, so remove or implement if loading state needed
       const token = localStorage.getItem('procollector_auth_token');
       const response = await fetch('/api/v1/dashboard/overview', {
         headers: {

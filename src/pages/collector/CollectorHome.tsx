@@ -1,6 +1,7 @@
 // import { useState } from 'react'; // Unused
-import { Plus, DollarSign, Users, TrendingUp, MapPin, Clock, CheckCircle } from 'lucide-react';
+import { Plus, DollarSign, Users, TrendingUp, MapPin, Clock, CheckCircle, Upload } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { csvTemplateGenerator, downloadCSV } from '../../lib/csvTemplates';
 
 export default function CollectorHome() {
   // Mock data for now - will be replaced with real API calls later
@@ -32,7 +33,7 @@ export default function CollectorHome() {
   return (
     <div className="space-y-6">
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Link
           to="add-client"
           className="bg-white border border-gray-200 rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all"
@@ -62,6 +63,24 @@ export default function CollectorHome() {
             </div>
           </div>
         </Link>
+
+        <div
+          onClick={() => {
+            const content = csvTemplateGenerator.generateTemplateContent('collector_clients');
+            if (content) downloadCSV(content, 'collector_clients_import_template.csv');
+          }}
+          className="bg-white border border-gray-200 rounded-lg p-5 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer"
+        >
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 bg-purple-100 rounded-lg flex items-center justify-center">
+              <Upload className="w-6 h-6 text-purple-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-base font-semibold text-gray-900 mb-1">Bulk Upload Clients</h3>
+              <p className="text-sm text-gray-600">Import multiple clients via CSV</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Header */}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { csvTemplateGenerator, downloadCSV } from '../../lib/csvTemplates';
 
 function parseCSV(text: string) {
     const lines = text.split(/\r?\n/).filter(Boolean);
@@ -98,19 +99,43 @@ export function CSVImport() {
                     <h2 className="text-2xl font-semibold">Bulk Data Import</h2>
                     <p className="text-sm text-gray-600">Upload CSV files to bulk import clients, collectors, agents, and transactions</p>
                 </div>
-                <div className="flex gap-2">
-                    <a href="/clients_import.csv" download className="px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded hover:bg-blue-700 text-sm font-medium">
+                <div className="flex gap-2 flex-wrap">
+                    <button
+                        onClick={() => {
+                            const content = csvTemplateGenerator.generateTemplateContent('clients');
+                            if (content) downloadCSV(content, 'clients_import_template.csv');
+                        }}
+                        className="px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded hover:bg-blue-700 text-sm font-medium"
+                    >
                         Download Clients Template
-                    </a>
-                    <a href="/collectors_import.csv" download className="px-4 py-2 bg-green-600 text-white border border-green-600 rounded hover:bg-green-700 text-sm font-medium">
+                    </button>
+                    <button
+                        onClick={() => {
+                            const content = csvTemplateGenerator.generateTemplateContent('collectors');
+                            if (content) downloadCSV(content, 'collectors_import_template.csv');
+                        }}
+                        className="px-4 py-2 bg-green-600 text-white border border-green-600 rounded hover:bg-green-700 text-sm font-medium"
+                    >
                         Download Collectors Template
-                    </a>
-                    <a href="/agents_import.csv" download className="px-4 py-2 bg-purple-600 text-white border border-purple-600 rounded hover:bg-purple-700 text-sm font-medium">
+                    </button>
+                    <button
+                        onClick={() => {
+                            const content = csvTemplateGenerator.generateTemplateContent('agents');
+                            if (content) downloadCSV(content, 'agents_import_template.csv');
+                        }}
+                        className="px-4 py-2 bg-purple-600 text-white border border-purple-600 rounded hover:bg-purple-700 text-sm font-medium"
+                    >
                         Download Agents Template
-                    </a>
-                    <a href="/transactions_import.csv" download className="px-4 py-2 bg-orange-600 text-white border border-orange-600 rounded hover:bg-orange-700 text-sm font-medium">
+                    </button>
+                    <button
+                        onClick={() => {
+                            const content = csvTemplateGenerator.generateTemplateContent('transactions');
+                            if (content) downloadCSV(content, 'transactions_import_template.csv');
+                        }}
+                        className="px-4 py-2 bg-orange-600 text-white border border-orange-600 rounded hover:bg-orange-700 text-sm font-medium"
+                    >
                         Download Transactions Template
-                    </a>
+                    </button>
                 </div>
             </div>
 

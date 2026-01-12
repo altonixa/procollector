@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AlertCircle, CheckCircle2, MapPin, X, UserPlus, Search, MoreVertical, Phone } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '../../components/ui/Card';
 import { cn } from '../../lib/utils';
+import { csvTemplateGenerator, downloadCSV } from '../../lib/csvTemplates';
 
 interface Collector {
   id: string;
@@ -501,12 +502,24 @@ export function ManagerPortal() {
                   <p className="text-sm text-gray-600">Upload CSV files to bulk import clients and collectors</p>
                 </div>
                 <div className="flex gap-2">
-                  <a href="/clients_import.csv" download className="px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded hover:bg-blue-700 text-sm font-medium">
+                  <button
+                    onClick={() => {
+                      const content = csvTemplateGenerator.generateTemplateContent('clients');
+                      if (content) downloadCSV(content, 'clients_import_template.csv');
+                    }}
+                    className="px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded hover:bg-blue-700 text-sm font-medium"
+                  >
                     Download Clients Template
-                  </a>
-                  <a href="/collectors_import.csv" download className="px-4 py-2 bg-green-600 text-white border border-green-600 rounded hover:bg-green-700 text-sm font-medium">
+                  </button>
+                  <button
+                    onClick={() => {
+                      const content = csvTemplateGenerator.generateTemplateContent('collectors');
+                      if (content) downloadCSV(content, 'collectors_import_template.csv');
+                    }}
+                    className="px-4 py-2 bg-green-600 text-white border border-green-600 rounded hover:bg-green-700 text-sm font-medium"
+                  >
                     Download Collectors Template
-                  </a>
+                  </button>
                 </div>
               </div>
 

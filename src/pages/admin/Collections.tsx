@@ -2,7 +2,6 @@ import { Filter, CheckCircle2, AlertCircle, Clock, FileDown, FileSpreadsheet } f
 import { Card } from '../../components/ui/Card';
 import { cn } from '../../lib/utils';
 import { Button } from '../../components/ui/Button';
-import { generatePDFReport, generateExcelReport } from '../../lib/reports';
 
 const mockCollections = [
     { id: '1', agent: 'Jean Dupont', amount: 'FCFA 45,000', method: 'Mobile Money', taxType: 'Market Fee', date: '2025-12-20 10:30', status: 'Verified' },

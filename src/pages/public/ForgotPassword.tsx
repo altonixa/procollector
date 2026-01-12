@@ -1,6 +1,6 @@
 import { Button } from "../../components/ui/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { ShieldCheck, ArrowLeft, Mail, CheckCircle, AlertCircle } from "lucide-react";
+import { ShieldCheck, ArrowLeft, Mail } from "lucide-react";
 import { useState } from "react";
 import { isProfessionalEmail } from "../../lib/emailValidation";
 

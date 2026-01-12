@@ -7,8 +7,8 @@ import { cn } from '../../lib/utils';
 export function GlobalOverview() {
     const [activeTab, setActiveTab] = useState<'overview' | 'orgs' | 'billing'>('overview');
     const [loading, setLoading] = useState(true);
-    const [data, setData] = useState(null);
-    const [error, setError] = useState(null);
+    const [data, setData] = useState<any>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         fetchDashboardData();
@@ -91,7 +91,7 @@ export function GlobalOverview() {
             {activeTab === 'overview' && (
                 <div className="space-y-6">
                     <div className="grid gap-3 md:grid-cols-3">
-                        {stats.map((stat, index) => {
+                        {stats.map((stat: any, index: number) => {
                             const icons = {
                                 'Total Organizations': Building2,
                                 'Total Users': Shield,
@@ -104,7 +104,7 @@ export function GlobalOverview() {
                                 'System Collections': 'bg-green-100 text-green-600',
                                 'System Health': 'bg-gray-100 text-gray-600'
                             };
-                            const IconComponent = icons[stat.label] || Activity;
+                            const IconComponent = icons[stat.label as keyof typeof icons] || Activity;
 
                             return (
                                 <Card key={index} className="border border-brand-slate-200 shadow-sm bg-white">
@@ -113,7 +113,7 @@ export function GlobalOverview() {
                                             <CardTitle className="text-xs font-medium text-brand-slate-600 uppercase tracking-wide">
                                                 {stat.label}
                                             </CardTitle>
-                                            <div className={`p-2 rounded-lg ${colors[stat.label] || 'bg-gray-100'}`}>
+                                            <div className={`p-2 rounded-lg ${colors[stat.label as keyof typeof colors] || 'bg-gray-100'}`}>
                                                 <IconComponent className="h-4 w-4" />
                                             </div>
                                         </div>
@@ -134,7 +134,7 @@ export function GlobalOverview() {
                         </CardHeader>
                         <CardContent className="p-0">
                             <div className="divide-y divide-brand-slate-100">
-                                {recentActivity.length > 0 ? recentActivity.map((activity, i) => (
+                                {recentActivity.length > 0 ? recentActivity.map((activity: any, i: number) => (
                                     <div key={i} className="px-4 py-3 hover:bg-brand-slate-50 transition-colors">
                                         <div className="flex items-center justify-between">
                                             <div className="flex-1">

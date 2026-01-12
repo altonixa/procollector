@@ -1,8 +1,7 @@
 import { Button } from "../../components/ui/Button";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ShieldCheck, ArrowLeft, Mail, CheckCircle, AlertCircle } from "lucide-react";
 import { useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
 import { isProfessionalEmail } from "../../lib/emailValidation";
 
 export function Signup() {
@@ -13,13 +12,6 @@ export function Signup() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { isLoading } = useAuth();
-    const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-
-    // Check if this is a demo access request
-    const demoRole = searchParams.get('demo');
-    const demoOrg = searchParams.get('org') || 'Demo Organization';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

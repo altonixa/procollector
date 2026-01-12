@@ -9,7 +9,7 @@ export function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const { login, isLoading, setDemoUser, user } = useAuth();
+    const { login, isLoading, setDemoUser } = useAuth();
     const navigate = useNavigate();
 
     // Map roles to production routes

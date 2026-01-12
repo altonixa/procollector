@@ -1,9 +1,8 @@
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 
 // Dashboard Pages
 import { Overview } from './pages/dashboard/Overview.tsx';

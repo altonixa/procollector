@@ -2,15 +2,6 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Download, Wallet, X, LogOut, Settings, HelpCircle, Home as HomeIcon, History, FileText, AlertCircle, User, Loader2 } from 'lucide-react';
 
-interface Payment {
-  id: string;
-  amount: string;
-  date: string;
-  collector: string;
-  status: 'Confirmed' | 'Pending';
-  method: string;
-}
-
 export function ClientPortal() {
   const [tab, setTab] = useState<'overview' | 'history' | 'statements' | 'disputes' | 'payment-methods' | 'profile'>('overview');
   const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
@@ -22,12 +13,21 @@ export function ClientPortal() {
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [disputes, setDisputes] = useState<any[]>([]);
-  const [statements, setStatements] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [newDispute, setNewDispute] = useState('');
   const [profileEdit, setProfileEdit] = useState(false);
+  const [profile, setProfile] = useState({
+    name: 'Loading...',
+    email: 'Loading...',
+    phone: 'Loading...'
+  });
+  const [paymentMethods, setPaymentMethods] = useState({
+    primary: 'MTN MOMO',
+    mtnMomo: 'Loading...',
+    orangeMoney: 'Loading...'
+  });
 
   useEffect(() => {
     fetchDashboardData();
@@ -46,6 +46,16 @@ export function ClientPortal() {
       const data = await response.json();
       if (response.ok && data.success) {
         setDashboardData(data.data);
+        if (data.data.client) {
+          setProfile({
+            name: data.data.client.name || 'N/A',
+            email: data.data.client.email || 'N/A',
+            phone: data.data.client.phone || 'N/A'
+          });
+        }
+        if (data.data.paymentMethods) {
+          setPaymentMethods(data.data.paymentMethods);
+        }
       } else {
         setError(data.error || 'Failed to load dashboard');
       }
@@ -404,7 +414,7 @@ export function ClientPortal() {
               <div className="bg-white rounded-lg border border-gray-200 p-4">
                 <h3 className="font-semibold text-gray-900 mb-4">Recent Payments</h3>
                 <div className="space-y-3">
-                  {dashboardData?.recentTransactions?.map((transaction) => (
+                  {dashboardData?.recentTransactions?.map((transaction: any) => (
                     <div key={transaction.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
                       <div>
                         <p className="font-medium text-gray-900 text-sm">{transaction.collector}</p>

@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { Button } from '../../components/ui/Button';
-import { Users, TrendingUp, FileText } from 'lucide-react';
 
 export function Collectors() {
     const [collectors] = useState([

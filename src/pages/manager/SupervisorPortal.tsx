@@ -33,7 +33,7 @@ export function SupervisorPortal() {
   const fetchSupervisorData = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('procollector_auth_token');
+      // const token = localStorage.getItem('procollector_auth_token'); // Unused for now
       // TODO: Implement supervisor dashboard API
       // For now, using mock data structure
       setData({

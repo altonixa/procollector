@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGeolocation } from '../../hooks/useGeolocation';
 import { Button } from '../../components/ui/Button';
-import { MapPin, Camera, CheckCircle2, Loader2, Wifi, WifiOff, RefreshCcw, Users, DollarSign, ChevronRight, Search, ArrowLeft } from 'lucide-react';
+import { MapPin, Camera, CheckCircle2, Loader2, Wifi, WifiOff, RefreshCcw, Users, DollarSign, Search, ArrowLeft } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { offlineStorage, type PendingCollection } from '../../lib/offlineStorage';
 import { v4 as uuidv4 } from 'uuid';
@@ -22,9 +22,9 @@ export default function FieldCollection() {
     const [pendingCount, setPendingCount] = useState(0);
     const [isSyncing, setIsSyncing] = useState(false);
     const [clients, setClients] = useState<any[]>([]);
-    const [loadingClients, setLoadingClients] = useState(true);
+    const [, setLoadingClients] = useState(true);
 
-    const { location, isLoading: geoLoading, error: geoError, captureLocation } = useGeolocation();
+    const { location, isLoading: geoLoading, captureLocation } = useGeolocation();
 
     useEffect(() => {
         const handleOnline = () => setIsOnline(true);

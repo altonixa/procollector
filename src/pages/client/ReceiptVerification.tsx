@@ -105,7 +105,7 @@ export function ReceiptVerification() {
                                     try {
                                         // Use the receipt PDF download endpoint
                                         const token = localStorage.getItem('procollector_auth_token');
-                                        const response = await fetch(`/api/v1/exports/receipt/${result.id}/pdf`, {
+                                        const response = await fetch(`/api/v1/exports/receipt/${refId}/pdf`, {
                                             headers: {
                                                 'Authorization': `Bearer ${token}`
                                             }
@@ -116,7 +116,7 @@ export function ReceiptVerification() {
                                             const url = window.URL.createObjectURL(blob);
                                             const a = document.createElement('a');
                                             a.href = url;
-                                            a.download = `receipt_${result.id}.pdf`;
+                                            a.download = `receipt_${refId}.pdf`;
                                             document.body.appendChild(a);
                                             a.click();
                                             window.URL.revokeObjectURL(url);

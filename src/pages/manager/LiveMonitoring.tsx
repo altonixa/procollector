@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { MapPin, Wifi, WifiOff, Clock, User, AlertTriangle } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 

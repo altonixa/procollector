@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Building2, Users, Eye, Edit, Trash2, Search, Plus, Loader2 } from 'lucide-react';
+import { Building2, Users, Eye, Edit, Trash2, Search, Plus } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 
 interface Organization {
@@ -15,8 +15,8 @@ interface Organization {
 
 export default function Organizations() {
   const [organizations, setOrganizations] = useState<Organization[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setLoading] = useState(true);
+  const [, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { Button } from "../../components/ui/Button";
 import { Link } from "react-router-dom";
 import { 
-  ShieldCheck, BarChart3, Globe2, Users, Wallet, Building2, Smartphone, ScrollText,
+  ShieldCheck, BarChart3, Globe2, Users, Wallet, Building2, Smartphone,
   CreditCard, Eye, MapPin, Clock, AlertTriangle, CheckCircle2, TrendingUp, 
   Database, Zap, Lock, Globe, Smartphone as MobileIcon, Tablet, Monitor
 } from "lucide-react";

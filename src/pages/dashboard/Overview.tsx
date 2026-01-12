@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Users, CreditCard, Wallet, Activity } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -142,7 +141,7 @@ export function Overview() {
                                     borderRadius: '8px',
                                     fontSize: '12px'
                                 }}
-                                formatter={(value) => [`FCFA ${value?.toLocaleString()}`, 'Revenue']}
+                                formatter={(value: any) => [`FCFA ${value?.toLocaleString()}`, 'Revenue']}
                             />
                             <Line
                                 type="monotone"

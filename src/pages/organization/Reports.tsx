@@ -2,7 +2,6 @@ import { BarChart3, TrendingUp, PieChart, ArrowUpRight, ArrowDownRight, Users, D
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { cn } from '../../lib/utils';
-import { generatePDFReport, generateExcelReport } from '../../lib/reports';
 
 export function Reports() {
     const handleExportPDF = async () => {

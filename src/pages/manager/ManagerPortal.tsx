@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AlertCircle, CheckCircle2, Clock, Users, MapPin, X, UserPlus, Search, MoreVertical, Phone } from 'lucide-react';
+import { AlertCircle, CheckCircle2, MapPin, X, UserPlus, Search, MoreVertical, Phone } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { cn } from '../../lib/utils';

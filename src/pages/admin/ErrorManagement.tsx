@@ -29,7 +29,7 @@ export default function ErrorManagement() {
     }
   ]);
 
-  const [selectedError, setSelectedError] = useState(null);
+  // const [selectedError, setSelectedError] = useState(null); // Unused for now
   const [filterStatus, setFilterStatus] = useState('all');
 
   const filteredErrors = filterStatus === 'all'

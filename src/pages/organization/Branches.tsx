@@ -1,7 +1,4 @@
 import { useState } from 'react';
-import { Button } from '../../components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
-import { Users, TrendingUp, MapPin, Plus } from 'lucide-react';
 
 export function Branches() {
     const [branches] = useState([

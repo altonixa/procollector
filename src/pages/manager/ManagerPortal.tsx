@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { AlertCircle, CheckCircle2, MapPin, X, UserPlus, Search, MoreVertical, Phone } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
 import { cn } from '../../lib/utils';
 
 interface Collector {
@@ -24,9 +23,11 @@ interface Alert {
 
 const mockCollectors: Collector[] = [
   { id: 'C001', name: 'Jean Dupont', collected: 'FCFA 45,000', clients: 12, status: 'Active', lastUpdate: '2 mins ago', zone: 'Centre Douala' },
-  { id: 'C002', name: 'Marie Kline', collected: 'FCFA 32,500', clients: 8, status: 'Active', lastUpdate: '5 mins ago', zone: 'Port Area' },
-  { id: 'C003', name: 'Sarah Ngono', collected: 'FCFA 18,000', clients: 5, status: 'Idle', lastUpdate: '45 mins ago', zone: 'Akwa' },
-  { id: 'C004', name: 'Pierre Mboh', collected: 'FCFA 0', clients: 0, status: 'Offline', lastUpdate: '3 hours ago', zone: 'Bonanjo' },
+  { id: 'C002', name: 'Marie Kline', collected: 'FCFA 32,500', clients: 8, status: 'Active', lastUpdate: '5 mins ago', zone: 'Bonanjo, Douala' },
+  { id: 'C003', name: 'Sarah Ngono', collected: 'FCFA 18,000', clients: 5, status: 'Idle', lastUpdate: '45 mins ago', zone: 'Akwa, Douala' },
+  { id: 'C004', name: 'Pierre Mboh', collected: 'FCFA 0', clients: 0, status: 'Offline', lastUpdate: '3 hours ago', zone: 'Bastos, Yaoundé' },
+  { id: 'C005', name: 'Paul Biya', collected: 'FCFA 67,500', clients: 15, status: 'Active', lastUpdate: '1 hour ago', zone: 'Messa, Yaoundé' },
+  { id: 'C006', name: 'Grace Nkono', collected: 'FCFA 28,900', clients: 7, status: 'Active', lastUpdate: '15 mins ago', zone: 'Deido, Douala' },
 ];
 
 const mockAlerts: Alert[] = [
@@ -36,10 +37,12 @@ const mockAlerts: Alert[] = [
 ];
 
 const mockAgents = [
-    { id: '1', name: 'Jean Dupont', email: 'jean.d@procollector.com', phone: '+237 670-000-111', zone: 'Akwa, Douala', status: 'Active', collections: '1.2M', lastActive: '2 mins ago' },
-    { id: '2', name: 'Marie Kline', email: 'marie.k@procollector.com', phone: '+237 671-222-333', zone: 'Bonanjo, Douala', status: 'Active', collections: '850K', lastActive: '15 mins ago' },
-    { id: '3', name: 'Paul Biya II', email: 'paul.b@procollector.com', phone: '+237 672-333-444', zone: 'Bastos, Yaoundé', status: 'Inactive', collections: '0', lastActive: '2 days ago' },
-    { id: '4', name: 'Sarah Ngono', email: 'sarah.n@procollector.com', phone: '+237 673-444-555', zone: 'Messa, Yaoundé', status: 'Active', collections: '450K', lastActive: '1 hr ago' },
+    { id: '1', name: 'Jean Dupont', email: 'jean.dupont@procollector.com', phone: '+237 670-123-456', zone: 'Centre Douala', status: 'Active', collections: '1.2M', lastActive: '2 mins ago' },
+    { id: '2', name: 'Marie Kline', email: 'marie.kline@procollector.com', phone: '+237 671-234-567', zone: 'Bonanjo, Douala', status: 'Active', collections: '850K', lastActive: '15 mins ago' },
+    { id: '3', name: 'Paul Biya', email: 'paul.biya@procollector.com', phone: '+237 672-345-678', zone: 'Bastos, Yaoundé', status: 'Inactive', collections: '0', lastActive: '2 days ago' },
+    { id: '4', name: 'Sarah Ngono', email: 'sarah.ngono@procollector.com', phone: '+237 673-456-789', zone: 'Messa, Yaoundé', status: 'Active', collections: '450K', lastActive: '1 hr ago' },
+    { id: '5', name: 'Pierre Mboh', email: 'pierre.mboh@procollector.com', phone: '+237 674-567-890', zone: 'Akwa, Douala', status: 'Active', collections: '675K', lastActive: '30 mins ago' },
+    { id: '6', name: 'Grace Nkono', email: 'grace.nkono@procollector.com', phone: '+237 675-678-901', zone: 'Deido, Douala', status: 'Active', collections: '320K', lastActive: '5 mins ago' },
 ];
 
 export function ManagerPortal() {
@@ -252,9 +255,9 @@ export function ManagerPortal() {
                   <h2 className="text-3xl font-black tracking-tighter text-brand-dark uppercase">Agents</h2>
                   <p className="text-brand-dark/60 mt-1 font-bold">Manage and monitor your field collectors in real-time.</p>
                 </div>
-                <Button variant="secondary" className="w-full md:w-auto shadow-lg shadow-black/10">
-                  <UserPlus className="mr-2 h-4 w-4" /> Add New Agent
-                </Button>
+                <button className="px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded hover:bg-blue-700 text-sm font-medium">
+                  <UserPlus className="mr-2 h-4 w-4 inline" /> Add New Agent
+                </button>
               </div>
 
               {/* Filters / Search */}
@@ -297,9 +300,9 @@ export function ManagerPortal() {
                           <p className="text-[10px] text-brand-green font-black uppercase tracking-widest">Field Collector</p>
                         </div>
                       </div>
-                      <Button variant="ghost" size="icon" className="h-10 w-10 text-brand-dark/20 hover:text-brand-dark hover:bg-brand-dark/5">
+                      <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
                         <MoreVertical className="h-5 w-5" />
-                      </Button>
+                      </button>
                     </CardHeader>
                     <CardContent className="pt-6 space-y-6">
                       <div className="grid grid-cols-1 gap-3">
@@ -328,9 +331,9 @@ export function ManagerPortal() {
 
                       <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest pt-2 border-t border-brand-dark/5">
                         <span className="text-brand-dark/30 italic">Active {agent.lastActive}</span>
-                        <Button variant="ghost" size="sm" className="h-8 text-[10px] text-brand-dark hover:text-brand-green hover:bg-brand-green/10 transition-colors uppercase font-black tracking-widest">
+                        <button className="px-3 py-1 text-xs text-blue-600 hover:text-blue-800 hover:bg-blue-50 border border-blue-200 rounded">
                           Track Activity
-                        </Button>
+                        </button>
                       </div>
                     </CardContent>
                   </Card>

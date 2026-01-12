@@ -15,15 +15,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <button
                 ref={ref}
                 className={cn(
-                    "inline-flex items-center justify-center whitespace-nowrap rounded-button text-sm font-black transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-slate-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] uppercase tracking-wider",
+                    "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 uppercase tracking-wide",
 
                     // Variants
-                    variant === 'primary' && "bg-brand-dark text-white hover:bg-brand-dark-soft shadow-lg shadow-brand-dark/20 border-none",
-                    variant === 'secondary' && "bg-brand-slate-600 text-white hover:bg-brand-slate-700 shadow-lg",
-                    variant === 'outline' && "border-2 border-brand-dark bg-transparent text-brand-dark hover:bg-brand-dark hover:text-white",
-                    variant === 'destructive' && "bg-rose-600 text-white hover:bg-rose-700 shadow-lg",
-                    variant === 'ghost' && "text-inherit hover:bg-white/10 hover:text-white",
-                    variant === 'white' && "bg-white text-brand-dark hover:bg-brand-dustGold shadow-xl",
+                    variant === 'primary' && "bg-blue-600 text-white hover:bg-blue-700 border border-blue-600",
+                    variant === 'secondary' && "bg-gray-600 text-white hover:bg-gray-700 border border-gray-600",
+                    variant === 'outline' && "border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50",
+                    variant === 'destructive' && "bg-red-600 text-white hover:bg-red-700 border border-red-600",
+                    variant === 'ghost' && "text-gray-600 hover:bg-gray-100",
+                    variant === 'white' && "bg-white text-gray-900 hover:bg-gray-50 border border-gray-300",
 
                     // Sizes
                     size === 'default' && "h-12 px-8",

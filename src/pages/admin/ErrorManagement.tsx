@@ -1,36 +1,58 @@
-import { useState } from 'react';
-import { Search, Download, Eye, Edit, Trash2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Search, Download, Eye, Edit, Trash2, Loader2, AlertCircle } from 'lucide-react';
+import { Button } from '../../components/ui/Button';
+
+interface Error {
+  id: string | number;
+  collector: string;
+  type: string;
+  description: string;
+  status: 'Pending' | 'In Progress' | 'Resolved';
+  date: string;
+}
 
 export default function ErrorManagement() {
-  const [errors] = useState([
-    {
-      id: 1,
-      collector: 'John Doe',
-      type: 'Collection Error',
-      description: 'Wrong amount recorded for client ABC',
-      status: 'Pending',
-      date: '2024-02-20'
-    },
-    {
-      id: 2,
-      collector: 'Jane Smith',
-      type: 'System Error',
-      description: 'Failed to sync offline data',
-      status: 'Resolved',
-      date: '2024-02-19'
-    },
-    {
-      id: 3,
-      collector: 'Mike Johnson',
-      type: 'Client Error',
-      description: 'Incorrect client information',
-      status: 'In Progress',
-      date: '2024-02-18'
-    }
-  ]);
-
-  // const [selectedError, setSelectedError] = useState(null); // Unused for now
+  const [errors, setErrors] = useState<Error[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState('all');
+
+  useEffect(() => {
+    fetchErrors();
+  }, []);
+
+  const fetchErrors = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const apiClient = (await import('../../lib/api')).apiClient;
+      const result = await apiClient.get<any>('/admin/errors');
+      
+      if (result.success && result.data) {
+        const data = result.data as any;
+        const transformed = (data.errors || data || []).map((err: any) => ({
+          id: err.id || err._id || Math.random(),
+          collector: err.collector?.name || err.collector || 'Unknown',
+          type: err.type || err.errorType || 'System Error',
+          description: err.description || err.message || 'No description',
+          status: err.status === 'resolved' ? 'Resolved' : err.status === 'in_progress' ? 'In Progress' : 'Pending',
+          date: err.createdAt ? new Date(err.createdAt).toLocaleDateString() : new Date().toLocaleDateString()
+        }));
+        setErrors(transformed);
+      } else {
+        // Fallback to empty array
+        setErrors([]);
+        setError(result.error || 'Failed to load errors');
+      }
+    } catch (err) {
+      console.error('Fetch errors error:', err);
+      setErrors([]);
+      setError('Network error. Please ensure the backend server is running.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredErrors = filterStatus === 'all'
     ? errors
@@ -96,7 +118,29 @@ export default function ErrorManagement() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredErrors.map((error) => (
+            {loading ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center">
+                  <Loader2 className="h-8 w-8 animate-spin text-brand-dark mx-auto mb-2" />
+                  <p className="text-sm text-brand-dark/60">Loading errors...</p>
+                </td>
+              </tr>
+            ) : error ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center">
+                  <AlertCircle className="h-8 w-8 text-rose-500 mx-auto mb-2" />
+                  <p className="text-sm text-rose-600 mb-4">{error}</p>
+                  <Button onClick={fetchErrors} variant="outline" size="sm">Retry</Button>
+                </td>
+              </tr>
+            ) : filteredErrors.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center text-brand-dark/40">
+                  No errors found
+                </td>
+              </tr>
+            ) : (
+              filteredErrors.map((error) => (
               <tr key={error.id}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{error.date}</div>
@@ -135,7 +179,8 @@ export default function ErrorManagement() {
                   </div>
                 </td>
               </tr>
-            ))}
+            ))
+            )}
           </tbody>
         </table>
       </div>

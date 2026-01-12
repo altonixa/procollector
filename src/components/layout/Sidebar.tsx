@@ -36,8 +36,10 @@ const getAdminNavItems = () => [
     { icon: Users, label: 'Organizations', to: config.getAdminPath('organizations') },
     { icon: FileText, label: 'Collections', to: config.getAdminPath('collections') },
     { icon: PiggyBank, label: 'CSV Import', to: config.getAdminPath('csv-import') },
+    { icon: Users, label: 'Users', to: config.getAdminPath('users') },
+    { icon: Activity, label: 'Errors', to: config.getAdminPath('errors') },
     { icon: TrendingUp, label: 'Reports', to: config.getAdminPath('reports') },
-    { icon: Settings, label: 'Settings', to: '/dashboard/settings' },
+    { icon: Settings, label: 'Settings', to: config.getAdminPath('settings') },
 ];
 
 const navItemsMap = {

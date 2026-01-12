@@ -1,21 +1,74 @@
-import React, { useState } from 'react';
-import { UserPlus, Search, Filter, Download, Eye, Edit, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { UserPlus, Search, Filter, Download, Eye, Edit, Trash2, Loader2, AlertCircle } from 'lucide-react';
+import { Button } from '../../components/ui/Button';
+
+interface User {
+  id: string | number;
+  name: string;
+  email: string;
+  role: string;
+  status: 'Active' | 'Inactive';
+}
 
 export default function UserManagement() {
-  const [users, setUsers] = useState([
-    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Collector', status: 'Active' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'Collector', status: 'Inactive' },
-    { id: 3, name: 'Mike Johnson', email: 'mike@example.com', role: 'Collector', status: 'Active' },
-  ]);
-
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showAddUser, setShowAddUser] = useState(false);
-  const [newUser, setNewUser] = useState({ name: '', email: '', role: 'Collector' });
+  const [newUser, setNewUser] = useState({ name: '', email: '', role: 'Collector', password: '' });
 
-  const handleAddUser = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const apiClient = (await import('../../lib/api')).apiClient;
+      const result = await apiClient.get<any>('/admin/users');
+      
+      if (result.success && result.data) {
+        const data = result.data as any;
+        const transformed = (data.users || data || []).map((user: any) => ({
+          id: user.id || user._id || Math.random(),
+          name: user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Unknown',
+          email: user.email || 'No email',
+          role: user.role || 'Collector',
+          status: user.status === 'active' || user.isActive ? 'Active' : 'Inactive'
+        }));
+        setUsers(transformed);
+      } else {
+        setUsers([]);
+        setError(result.error || 'Failed to load users');
+      }
+    } catch (err) {
+      console.error('Fetch users error:', err);
+      setUsers([]);
+      setError('Network error. Please ensure the backend server is running.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    setUsers([...users, { ...newUser, id: users.length + 1, status: 'Active' }]);
-    setShowAddUser(false);
-    setNewUser({ name: '', email: '', role: 'Collector' });
+    try {
+      const apiClient = (await import('../../lib/api')).apiClient;
+      const result = await apiClient.post('/admin/users', newUser);
+      
+      if (result.success) {
+        setShowAddUser(false);
+        setNewUser({ name: '', email: '', role: 'Collector', password: '' });
+        fetchUsers(); // Refresh list
+      } else {
+        alert(result.error || 'Failed to add user');
+      }
+    } catch (err) {
+      console.error('Add user error:', err);
+      alert('Failed to add user. Please try again.');
+    }
   };
 
   return (
@@ -65,9 +118,22 @@ export default function UserManagement() {
                     onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   >
-                    <option>Collector</option>
-                    <option>Admin</option>
+                    <option value="collector">Collector</option>
+                    <option value="manager">Manager</option>
+                    <option value="organization">Organization Admin</option>
+                    <option value="admin">System Admin</option>
                   </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                  <input
+                    type="password"
+                    required
+                    value={newUser.password}
+                    onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    minLength={6}
+                  />
                 </div>
               </div>
               <div className="flex justify-end space-x-4 mt-6">
@@ -124,7 +190,29 @@ export default function UserManagement() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {users.map((user) => (
+            {loading ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-12 text-center">
+                  <Loader2 className="h-8 w-8 animate-spin text-brand-dark mx-auto mb-2" />
+                  <p className="text-sm text-brand-dark/60">Loading users...</p>
+                </td>
+              </tr>
+            ) : error ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-12 text-center">
+                  <AlertCircle className="h-8 w-8 text-rose-500 mx-auto mb-2" />
+                  <p className="text-sm text-rose-600 mb-4">{error}</p>
+                  <Button onClick={fetchUsers} variant="outline" size="sm">Retry</Button>
+                </td>
+              </tr>
+            ) : users.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-12 text-center text-brand-dark/40">
+                  No users found
+                </td>
+              </tr>
+            ) : (
+              users.map((user) => (
               <tr key={user.id}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">{user.name}</div>
@@ -156,7 +244,8 @@ export default function UserManagement() {
                   </div>
                 </td>
               </tr>
-            ))}
+            ))
+            )}
           </tbody>
         </table>
       </div>

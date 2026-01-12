@@ -1,15 +1,69 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Loader2, AlertCircle, CheckCircle } from 'lucide-react';
+import { Button } from '../../components/ui/Button';
 
 export default function FinancialConfig() {
   const [settings, setSettings] = useState({
-    currency: 'USD',
-    monthlyCharge: 50,
+    currency: 'FCFA',
+    monthlyCharge: 0,
     paymentGateways: {
-      stripe: { enabled: true, apiKey: '•••••••••••••' },
+      stripe: { enabled: false, apiKey: '' },
       flutterwave: { enabled: false, apiKey: '' },
-      paypal: { enabled: true, apiKey: '•••••••••••••' }
+      paypal: { enabled: false, apiKey: '' }
     }
   });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    fetchConfig();
+  }, []);
+
+  const fetchConfig = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const apiClient = (await import('../../lib/api')).apiClient;
+      const result = await apiClient.get<any>('/admin/financial-config');
+      
+      if (result.success && result.data) {
+        setSettings(result.data);
+      } else {
+        setError(result.error || 'Failed to load financial configuration');
+      }
+    } catch (err) {
+      console.error('Fetch config error:', err);
+      setError('Network error. Please ensure the backend server is running.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      setError(null);
+      setSuccess(false);
+      
+      const apiClient = (await import('../../lib/api')).apiClient;
+      const result = await apiClient.put('/admin/financial-config', settings);
+      
+      if (result.success) {
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+      } else {
+        setError(result.error || 'Failed to save configuration');
+      }
+    } catch (err) {
+      console.error('Save config error:', err);
+      setError('Failed to save configuration. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div>
@@ -29,6 +83,7 @@ export default function FinancialConfig() {
                 onChange={(e) => setSettings({ ...settings, currency: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               >
+                <option value="FCFA">FCFA - Central African Franc</option>
                 <option value="USD">USD - US Dollar</option>
                 <option value="EUR">EUR - Euro</option>
                 <option value="GBP">GBP - British Pound</option>

@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Loader2, AlertCircle, CheckCircle } from 'lucide-react';
+import { Button } from '../../components/ui/Button';
 
 export default function AdminSettings() {
   const [settings, setSettings] = useState({
@@ -10,10 +12,89 @@ export default function AdminSettings() {
     darkMode: false,
     language: 'en'
   });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const apiClient = (await import('../../lib/api')).apiClient;
+      const result = await apiClient.get<any>('/admin/settings');
+      
+      if (result.success && result.data) {
+        setSettings(result.data);
+      } else {
+        setError(result.error || 'Failed to load settings');
+      }
+    } catch (err) {
+      console.error('Fetch settings error:', err);
+      setError('Network error. Please ensure the backend server is running.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      setError(null);
+      setSuccess(false);
+      
+      const apiClient = (await import('../../lib/api')).apiClient;
+      const result = await apiClient.put('/admin/settings', settings);
+      
+      if (result.success) {
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+      } else {
+        setError(result.error || 'Failed to save settings');
+      }
+    } catch (err) {
+      console.error('Save settings error:', err);
+      setError('Failed to save settings. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-brand-dark" />
+      </div>
+    );
+  }
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">System Settings</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">System Settings</h1>
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? 'Saving...' : 'Save Changes'}
+        </Button>
+      </div>
+
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+          <AlertCircle className="h-5 w-5 text-red-600" />
+          <p className="text-sm text-red-600">{error}</p>
+        </div>
+      )}
+
+      {success && (
+        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
+          <CheckCircle className="h-5 w-5 text-green-600" />
+          <p className="text-sm text-green-600">Settings saved successfully!</p>
+        </div>
+      )}
       
       <div className="space-y-6">
         {/* General Settings */}
@@ -148,16 +229,6 @@ export default function AdminSettings() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Save Changes */}
-        <div className="flex justify-end space-x-4">
-          <button className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
-            Cancel
-          </button>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-            Save Changes
-          </button>
         </div>
       </div>
     </div>

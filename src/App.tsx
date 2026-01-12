@@ -30,6 +30,12 @@ import { GlobalOverview } from './pages/admin/GlobalOverview';
 import { CSVImport } from './pages/admin/CSVImport';
 import Organizations from './pages/admin/Organizations';
 import { Collections } from './pages/admin/Collections';
+import ErrorManagement from './pages/admin/ErrorManagement';
+import UserManagement from './pages/admin/UserManagement';
+import FinancialConfig from './pages/admin/FinancialConfig';
+import SmtpConfig from './pages/admin/SmtpConfig';
+import AdminSettings from './pages/admin/AdminSettings';
+import AdminReports from './pages/admin/Reports';
 
 // Organization Admin Portal
 import { OrgAdminDashboard } from './pages/organization/OrgAdminDashboard';
@@ -111,6 +117,12 @@ function App() {
             <Route path="csv-import" element={<ProtectedRoute requiredRole="admin"><CSVImport /></ProtectedRoute>} />
             <Route path="organizations" element={<ProtectedRoute requiredRole="admin"><Organizations /></ProtectedRoute>} />
             <Route path="collections" element={<ProtectedRoute requiredRole="admin"><Collections /></ProtectedRoute>} />
+            <Route path="errors" element={<ProtectedRoute requiredRole="admin"><ErrorManagement /></ProtectedRoute>} />
+            <Route path="users" element={<ProtectedRoute requiredRole="admin"><UserManagement /></ProtectedRoute>} />
+            <Route path="financial" element={<ProtectedRoute requiredRole="admin"><FinancialConfig /></ProtectedRoute>} />
+            <Route path="smtp" element={<ProtectedRoute requiredRole="admin"><SmtpConfig /></ProtectedRoute>} />
+            <Route path="settings" element={<ProtectedRoute requiredRole="admin"><AdminSettings /></ProtectedRoute>} />
+            <Route path="reports" element={<ProtectedRoute requiredRole="admin"><AdminReports /></ProtectedRoute>} />
           </Route>
 
           {/* Organization Admin Portal */}

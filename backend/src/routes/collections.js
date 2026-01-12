@@ -6,7 +6,7 @@ import { authorize } from '../middleware/authorize.js';
 import { collectionLimiter } from '../middleware/rateLimiter.js';
 import { uploadProof, handleUploadError } from '../middleware/upload.js';
 import { v4 as uuidv4 } from 'uuid';
-import { emailService } from '../services/emailService.js';
+import emailService from '../services/emailService.js';
 
 const router = express.Router();
 

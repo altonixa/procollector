@@ -3,7 +3,7 @@ import { body, validationResult } from 'express-validator';
 import { User, Organization } from '../models/index.js';
 import { authenticate } from '../middleware/auth.js';
 import { authorize } from '../middleware/authorize.js';
-import { sendCollectorWelcomeEmail } from '../services/emailService.js';
+import emailService from '../services/emailService.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const router = express.Router();
@@ -59,7 +59,7 @@ router.post('/collectors',
             // Note: In production, use a queue for email sending to prevent blocking response
             try {
                 const loginUrl = process.env.CLIENT_URL || 'http://localhost:5173/login';
-                await sendCollectorWelcomeEmail(
+                await emailService.sendCollectorWelcomeEmail(
                     email,
                     name,
                     tempPassword,

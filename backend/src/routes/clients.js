@@ -2,11 +2,11 @@ import express from 'express';
 import { body, query, validationResult } from 'express-validator'; // Added query
 import bcrypt from 'bcryptjs';
 import { Op } from 'sequelize'; // Added Op
-import { Organization } from '../models/Organization.js';
-import { Client } from '../models/Client.js';
-import { User } from '../models/User.js';
-import { authenticate, authorize } from '../middleware/auth.js';
-import { emailService } from '../services/emailService.js';
+
+import Client from '../models/Client.js';
+
+import { authenticate } from '../middleware/auth.js';
+import { authorize } from '../middleware/authorize.js';
 
 const router = express.Router();
 

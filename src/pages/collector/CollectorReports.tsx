@@ -67,11 +67,30 @@ export default function CollectorReports() {
         </div>
       </div>
 
-      {/* Chart */}
+      {/* Collection Trends */}
       <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
         <h2 className="text-xl font-semibold mb-4">Collection Trends</h2>
-        <div className="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-          [Chart Placeholder]
+        <div className="space-y-4">
+          <div className="text-sm text-gray-600 mb-4">Your collection performance over the last 7 days</div>
+          <div className="grid grid-cols-7 gap-2">
+            {[
+              { day: 'Mon', amount: '$3,200' },
+              { day: 'Tue', amount: '$2,800' },
+              { day: 'Wed', amount: '$3,600' },
+              { day: 'Thu', amount: '$4,100' },
+              { day: 'Fri', amount: '$3,900' },
+              { day: 'Sat', amount: '$2,500' },
+              { day: 'Sun', amount: '$1,800' }
+            ].map((day) => (
+              <div key={day.day} className="text-center">
+                <div className="text-xs text-gray-500 mb-1">{day.day}</div>
+                <div className="text-sm font-medium text-gray-900">{day.amount}</div>
+                <div className="w-8 h-16 bg-blue-200 rounded mx-auto mt-1 flex items-end">
+                  <div className="w-full bg-blue-600 rounded-b" style={{ height: `${Math.random() * 60 + 20}%` }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
 import { Users, Search, Plus, Edit, Trash2 } from 'lucide-react';
 
 interface Agent {
@@ -18,6 +17,14 @@ export function Agents() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    status: 'active' as 'active' | 'inactive'
+  });
 
   useEffect(() => {
     fetchAgents();
@@ -26,12 +33,12 @@ export function Agents() {
   const fetchAgents = async () => {
     try {
       setLoading(true);
-      // TODO: Implement real API call
+      // Mock data - all data is seeded
       setAgents([
         {
           id: '1',
           name: 'Jean Dupont',
-          email: 'jean@example.com',
+          email: 'jean.dupont@procollector.com',
           phone: '+237 677 123 456',
           status: 'active',
           assignedClients: 25,
@@ -41,11 +48,41 @@ export function Agents() {
         {
           id: '2',
           name: 'Marie Kline',
-          email: 'marie@example.com',
+          email: 'marie.kline@procollector.com',
           phone: '+237 699 234 567',
           status: 'active',
           assignedClients: 18,
           todayCollections: 89000,
+          performance: 'good'
+        },
+        {
+          id: '3',
+          name: 'Sarah Ngono',
+          email: 'sarah.ngono@procollector.com',
+          phone: '+237 673 456 789',
+          status: 'active',
+          assignedClients: 32,
+          todayCollections: 145000,
+          performance: 'excellent'
+        },
+        {
+          id: '4',
+          name: 'Pierre Mboh',
+          email: 'pierre.mboh@procollector.com',
+          phone: '+237 674 567 890',
+          status: 'inactive',
+          assignedClients: 8,
+          todayCollections: 25000,
+          performance: 'needs_improvement'
+        },
+        {
+          id: '5',
+          name: 'Grace Nkono',
+          email: 'grace.nkono@procollector.com',
+          phone: '+237 675 678 901',
+          status: 'active',
+          assignedClients: 15,
+          todayCollections: 78000,
           performance: 'good'
         }
       ]);
@@ -54,6 +91,57 @@ export function Agents() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAddAgent = () => {
+    setFormData({ name: '', email: '', phone: '', status: 'active' });
+    setEditingAgent(null);
+    setShowAddModal(true);
+  };
+
+  const handleEditAgent = (agent: Agent) => {
+    setFormData({
+      name: agent.name,
+      email: agent.email,
+      phone: agent.phone,
+      status: agent.status
+    });
+    setEditingAgent(agent);
+    setShowAddModal(true);
+  };
+
+  const handleDeleteAgent = (agentId: string) => {
+    if (confirm('Are you sure you want to delete this agent?')) {
+      setAgents(agents.filter(agent => agent.id !== agentId));
+    }
+  };
+
+  const handleSaveAgent = () => {
+    if (!formData.name || !formData.email || !formData.phone) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    if (editingAgent) {
+      // Update existing agent
+      setAgents(agents.map(agent =>
+        agent.id === editingAgent.id
+          ? { ...agent, ...formData }
+          : agent
+      ));
+    } else {
+      // Add new agent
+      const newAgent: Agent = {
+        id: Date.now().toString(),
+        ...formData,
+        assignedClients: 0,
+        todayCollections: 0,
+        performance: 'good'
+      };
+      setAgents([...agents, newAgent]);
+    }
+
+    setShowAddModal(false);
   };
 
   const filteredAgents = agents.filter(agent =>
@@ -90,10 +178,10 @@ export function Agents() {
             <h1 className="text-2xl font-bold text-gray-900">Agent Management</h1>
             <p className="text-gray-600">Manage field collectors and monitor performance</p>
           </div>
-          <Button className="flex items-center gap-2">
-            <Plus className="w-4 h-4" />
+          <button onClick={handleAddAgent} className="px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded hover:bg-blue-700 text-sm font-medium">
+            <Plus className="w-4 h-4 inline mr-2" />
             Add Agent
-          </Button>
+          </button>
         </div>
 
         {/* Search */}
@@ -145,12 +233,12 @@ export function Agents() {
                       </span>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <button onClick={() => handleEditAgent(agent)} className="px-3 py-1 text-sm border border-gray-300 rounded text-gray-700 hover:bg-gray-50">
+                        <Edit className="w-4 h-4 inline" />
+                      </button>
+                      <button onClick={() => handleDeleteAgent(agent.id)} className="px-3 py-1 text-sm border border-red-300 rounded text-red-700 hover:bg-red-50">
+                        <Trash2 className="w-4 h-4 inline" />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -168,6 +256,79 @@ export function Agents() {
           </Card>
         )}
       </div>
+
+      {/* Add/Edit Agent Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-md shadow-xl">
+            <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+              <h3 className="text-base font-semibold text-gray-900">
+                {editingAgent ? 'Edit Agent' : 'Add New Agent'}
+              </h3>
+              <button onClick={() => setShowAddModal(false)} className="text-gray-400 hover:text-gray-600">
+                ×
+              </button>
+            </div>
+            <div className="p-4 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter agent name"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter email address"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="+237 XXX XXX XXX"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div className="px-4 py-3 border-t border-gray-200 flex gap-2 justify-end">
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveAgent}
+                className="px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded hover:bg-blue-700"
+              >
+                {editingAgent ? 'Update Agent' : 'Add Agent'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-gray-200 bg-gray-50 px-4 py-6 mt-8">

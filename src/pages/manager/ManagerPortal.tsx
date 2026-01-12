@@ -46,7 +46,7 @@ const mockAgents = [
 ];
 
 export function ManagerPortal() {
-  const [tab, setTab] = useState<'dashboard' | 'collectors' | 'agents' | 'alerts'>('dashboard');
+  const [tab, setTab] = useState<'dashboard' | 'collectors' | 'agents' | 'reports' | 'alerts'>('dashboard');
   const [selectedCollector, setSelectedCollector] = useState<Collector | null>(null);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -116,6 +116,7 @@ export function ManagerPortal() {
               { id: 'dashboard', label: 'Dashboard' },
               { id: 'collectors', label: 'Collectors' },
               { id: 'agents', label: 'Agents' },
+              { id: 'reports', label: 'Reports' },
               { id: 'alerts', label: 'Alerts' },
             ].map((t) => (
               <button
@@ -338,6 +339,154 @@ export function ManagerPortal() {
                     </CardContent>
                   </Card>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* REPORTS */}
+          {tab === 'reports' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Reports & Analytics</h2>
+                  <p className="text-sm text-gray-600">Comprehensive performance and collection analytics</p>
+                </div>
+                <div className="flex gap-2">
+                  <button className="px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded hover:bg-blue-700 text-sm font-medium">
+                    Export PDF
+                  </button>
+                  <button className="px-4 py-2 bg-green-600 text-white border border-green-600 rounded hover:bg-green-700 text-sm font-medium">
+                    Export Excel
+                  </button>
+                </div>
+              </div>
+
+              {/* Performance Overview Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <div className="text-xs text-gray-600 mb-1">Total Collections Today</div>
+                  <div className="text-2xl font-bold text-blue-600">FCFA 425,000</div>
+                  <div className="text-xs text-green-600 mt-1">+12% from yesterday</div>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <div className="text-xs text-gray-600 mb-1">Target Income</div>
+                  <div className="text-2xl font-bold text-green-600">FCFA 500,000</div>
+                  <div className="text-xs text-green-600 mt-1">85% achieved</div>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <div className="text-xs text-gray-600 mb-1">Average Savings Rate</div>
+                  <div className="text-2xl font-bold text-purple-600">78.5%</div>
+                  <div className="text-xs text-green-600 mt-1">+2.1% this month</div>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <div className="text-xs text-gray-600 mb-1">Performance Score</div>
+                  <div className="text-2xl font-bold text-orange-600">92%</div>
+                  <div className="text-xs text-green-600 mt-1">+5% this week</div>
+                </div>
+              </div>
+
+              {/* Collectors Performance Table */}
+              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <div className="px-4 py-3 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-900">Collectors Performance</h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-600">Collector</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-600">Collections</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-600">Revenue</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-600">Target</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-600">Performance</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-600">Savings Rate</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {mockCollectors.map((collector) => {
+                        const target = 50000; // Mock target
+                        const savingsRate = Math.floor(Math.random() * 20) + 70; // 70-90%
+                        const revenue = parseInt(collector.collected.replace(/\D/g, ''));
+                        const performance = Math.round((revenue / target) * 100);
+
+                        return (
+                          <tr key={collector.id} className="hover:bg-gray-50">
+                            <td className="px-4 py-2.5 font-medium text-gray-900">{collector.name}</td>
+                            <td className="px-4 py-2.5 text-gray-600">12</td>
+                            <td className="px-4 py-2.5 font-semibold text-gray-900">{collector.collected}</td>
+                            <td className="px-4 py-2.5 text-gray-600">FCFA {target.toLocaleString()}</td>
+                            <td className="px-4 py-2.5">
+                              <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                                performance >= 90 ? 'bg-green-100 text-green-700' :
+                                performance >= 75 ? 'bg-yellow-100 text-yellow-700' :
+                                'bg-red-100 text-red-700'
+                              }`}>
+                                {performance}%
+                              </span>
+                            </td>
+                            <td className="px-4 py-2.5 text-gray-900">{savingsRate}%</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Client Savings Analytics */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Savings Rate by Client Type</h3>
+                  <div className="space-y-3">
+                    {[
+                      { type: 'Regular Clients', rate: '85%', clients: 245 },
+                      { type: 'Premium Clients', rate: '92%', clients: 67 },
+                      { type: 'New Clients', rate: '68%', clients: 89 },
+                      { type: 'Corporate Clients', rate: '95%', clients: 23 }
+                    ].map((item) => (
+                      <div key={item.type} className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium text-gray-900">{item.type}</div>
+                          <div className="text-sm text-gray-500">{item.clients} clients</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-semibold text-gray-900">{item.rate}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Weekly Performance Trend</h3>
+                  <div className="space-y-2">
+                    {[
+                      { day: 'Monday', collections: 125000, target: 100000 },
+                      { day: 'Tuesday', collections: 98000, target: 100000 },
+                      { day: 'Wednesday', collections: 145000, target: 100000 },
+                      { day: 'Thursday', collections: 112000, target: 100000 },
+                      { day: 'Friday', collections: 158000, target: 100000 },
+                      { day: 'Saturday', collections: 89000, target: 100000 },
+                      { day: 'Sunday', collections: 67000, target: 100000 }
+                    ].map((day) => (
+                      <div key={day.day} className="flex items-center justify-between">
+                        <div className="font-medium text-gray-900 w-20">{day.day.slice(0, 3)}</div>
+                        <div className="flex-1 mx-4">
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full"
+                              style={{ width: `${Math.min((day.collections / day.target) * 100, 100)}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                        <div className="text-right text-sm">
+                          <div className="font-medium text-gray-900">FCFA {day.collections.toLocaleString()}</div>
+                          <div className="text-gray-500">Target: {day.target.toLocaleString()}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           )}

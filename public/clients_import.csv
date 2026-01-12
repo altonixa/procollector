@@ -1,0 +1,11 @@
+client_name,client_phone,client_email,client_address,account_balance,registration_date,client_type,status
+"Jean Dupont","+237 677 123 456","jean.dupont@email.com","123 Main St, Douala","15000","2024-01-15","Regular","Active"
+"Marie Smith","+237 699 234 567","marie.smith@email.com","456 Oak Ave, Yaoundé","25000","2024-01-20","Premium","Active"
+"Paul Biya","+237 670 345 678","paul.biya@email.com","789 Pine Rd, Douala","8000","2024-02-01","Regular","Active"
+"Sarah Ngono","+237 673 456 789","sarah.ngono@email.com","321 Elm St, Yaoundé","35000","2024-02-10","Premium","Active"
+"Pierre Mboh","+237 674 567 890","pierre.mboh@email.com","654 Cedar Ln, Douala","12000","2024-02-15","Regular","Inactive"
+"Grace Nkono","+237 675 678 901","grace.nkono@email.com","987 Birch Ave, Yaoundé","18000","2024-02-20","Regular","Active"
+"Jean-Claude","+237 676 789 012","jean.claude@email.com","147 Maple St, Douala","22000","2024-02-25","Premium","Active"
+"Fatima Ali","+237 677 890 123","fatima.ali@email.com","258 Spruce Rd, Yaoundé","9500","2024-03-01","Regular","Active"
+"Samuel Wong","+237 678 901 234","samuel.wong@email.com","369 Willow Ln, Douala","41000","2024-03-05","Corporate","Active"
+"Rose Mbeki","+237 679 012 345","rose.mbeki@email.com","741 Poplar Ave, Yaoundé","16500","2024-03-10","Regular","Active"

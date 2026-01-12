@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
 
 function parseCSV(text: string) {
     const lines = text.split(/\r?\n/).filter(Boolean);
@@ -94,79 +92,138 @@ export function CSVImport() {
     };
 
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between">
+        <div className="space-y-6">
+            <div className="flex justify-between items-center">
                 <div>
-                    <h2 className="text-3xl font-black uppercase">CSV Migration</h2>
-                    <p className="text-sm text-brand-dark/60">Upload `clients_import.csv` or `transactions_import.csv` and preview before applying (frontend-only mock).</p>
+                    <h2 className="text-2xl font-semibold">Bulk Data Import</h2>
+                    <p className="text-sm text-gray-600">Upload CSV files to bulk import clients, collectors, agents, and transactions</p>
                 </div>
                 <div className="flex gap-2">
-                    <a href="/clients_import.csv" download className="inline-block">
-                        <Button variant="outline">Download clients_import.csv</Button>
+                    <a href="/clients_import.csv" download className="px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded hover:bg-blue-700 text-sm font-medium">
+                        Download Clients Template
                     </a>
-                    <a href="/transactions_import.csv" download className="inline-block">
-                        <Button variant="outline">Download transactions_import.csv</Button>
+                    <a href="/collectors_import.csv" download className="px-4 py-2 bg-green-600 text-white border border-green-600 rounded hover:bg-green-700 text-sm font-medium">
+                        Download Collectors Template
+                    </a>
+                    <a href="/agents_import.csv" download className="px-4 py-2 bg-purple-600 text-white border border-purple-600 rounded hover:bg-purple-700 text-sm font-medium">
+                        Download Agents Template
+                    </a>
+                    <a href="/transactions_import.csv" download className="px-4 py-2 bg-orange-600 text-white border border-orange-600 rounded hover:bg-orange-700 text-sm font-medium">
+                        Download Transactions Template
                     </a>
                 </div>
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle className="font-black">Upload CSV</CardTitle>
-                    <CardDescription className="text-xs">Preview & validate before applying. This is client-side only (no DB).</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-4">
-                        <input type="file" accept=".csv,text/csv" onChange={(e) => handleFile(e.target.files?.[0])} />
-
-                        {errors.length > 0 && (
-                            <div className="bg-rose-50 p-3 rounded">
-                                <strong className="font-black">Errors:</strong>
-                                <ul className="list-disc pl-6">
-                                    {errors.map((err, i) => <li key={i}>{err}</li>)}
-                                </ul>
-                            </div>
-                        )}
-
-                        {preview && (
-                            <div>
-                                <div className="overflow-x-auto border rounded">
-                                    <table className="w-full text-left border-collapse">
-                                        <thead>
-                                            <tr className="bg-brand-dark text-white">
-                                                {preview.headers.map((h, i) => <th key={i} className="px-3 py-2 text-xs font-black">{h}</th>)}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {preview.rows.slice(0, 10).map((r, i) => (
-                                                <tr key={i} className="odd:bg-white even:bg-gray-50">
-                                                    {r.map((c, j) => <td key={j} className="px-3 py-2 text-sm">{c}</td>)}
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div className="flex items-center gap-2 mt-4">
-                                    <Button onClick={handleApply} variant="secondary">Apply Migration (Mock)</Button>
-                                    <Button variant="outline" onClick={() => { setPreview(null); setErrors([]); setMessage(null); }}>Clear</Button>
-                                </div>
-                            </div>
-                        )}
-
-                        {message && <div className="text-sm font-bold">{message}</div>}
+            {/* Template Information */}
+            <div className="bg-white border border-gray-200 rounded-lg p-4">
+                <h3 className="text-lg font-semibold mb-3">Available Templates</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <strong>Clients Template:</strong> client_name, client_phone, client_email, client_address, account_balance, registration_date, client_type, status
                     </div>
-                </CardContent>
-            </Card>
+                    <div>
+                        <strong>Collectors Template:</strong> collector_name, collector_phone, collector_email, assigned_zone, supervisor_name, start_date, status, target_amount, daily_limit
+                    </div>
+                    <div>
+                        <strong>Agents Template:</strong> agent_name, agent_phone, agent_email, assigned_zone, manager_name, start_date, status, monthly_target, commission_rate
+                    </div>
+                    <div>
+                        <strong>Transactions Template:</strong> transaction_id, client_name, client_phone, collector_name, amount, transaction_date, transaction_type, payment_method, status, notes
+                    </div>
+                </div>
+            </div>
 
-            {/* Footer */}
-            <footer className="border-t border-gray-200 bg-gray-50 px-4 py-6 mt-8">
-              <div className="text-center">
-                <p className="text-xs text-gray-500 font-medium">
-                  Powered by Altonixa Group Ltd • Data Migration
-                </p>
-              </div>
-            </footer>
+            {/* Upload Section */}
+            <div className="bg-white border border-gray-200 rounded-lg p-4">
+                <h3 className="text-lg font-semibold mb-4">Upload CSV File</h3>
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Select CSV File</label>
+                        <input
+                            type="file"
+                            accept=".csv,text/csv"
+                            onChange={(e) => handleFile(e.target.files?.[0])}
+                            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+
+                    {errors.length > 0 && (
+                        <div className="bg-red-50 border border-red-200 rounded p-3">
+                            <strong className="text-red-800">Validation Errors:</strong>
+                            <ul className="list-disc pl-6 mt-2 text-red-700">
+                                {errors.map((err, i) => <li key={i}>{err}</li>)}
+                            </ul>
+                        </div>
+                    )}
+
+                    {preview && (
+                        <div>
+                            <h4 className="font-medium mb-2">Preview (showing first 10 rows):</h4>
+                            <div className="overflow-x-auto border border-gray-300 rounded">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-gray-50 border-b border-gray-300">
+                                            {preview.headers.map((h, i) => (
+                                                <th key={i} className="px-3 py-2 text-xs font-medium text-gray-700 border-r border-gray-300 last:border-r-0">
+                                                    {h}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {preview.rows.slice(0, 10).map((r, i) => (
+                                            <tr key={i} className="border-b border-gray-200 last:border-b-0">
+                                                {r.map((c, j) => (
+                                                    <td key={j} className="px-3 py-2 text-sm text-gray-900 border-r border-gray-200 last:border-r-0">
+                                                        {c}
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div className="flex gap-2 mt-4">
+                                <button
+                                    onClick={handleApply}
+                                    disabled={errors.length > 0}
+                                    className="px-4 py-2 bg-green-600 text-white border border-green-600 rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                                >
+                                    Import Data
+                                </button>
+                                <button
+                                    onClick={() => { setPreview(null); setErrors([]); setMessage(null); }}
+                                    className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-sm font-medium"
+                                >
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {message && (
+                        <div className={`p-3 rounded border ${
+                            message.includes('successfully') ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'
+                        }`}>
+                            {message}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Instructions */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-blue-900 mb-2">Import Instructions</h3>
+                <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• Download the appropriate template file for your data type</li>
+                    <li>• Fill in your data following the column headers exactly</li>
+                    <li>• Save as CSV format (comma-separated values)</li>
+                    <li>• Upload the file to validate and preview before importing</li>
+                    <li>• Review any validation errors and fix them before proceeding</li>
+                    <li>• Click "Import Data" to complete the bulk upload</li>
+                </ul>
+            </div>
         </div>
     );
 }

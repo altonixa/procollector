@@ -1,0 +1,11 @@
+transaction_id,client_name,client_phone,collector_name,amount,transaction_date,transaction_type,payment_method,status,notes
+"TXN001","Jean Dupont","+237 677 123 456","Marie Smith","5000","2024-01-15","Collection","Cash","Completed","Regular monthly payment"
+"TXN002","Marie Smith","+237 699 234 567","Jean Dupont","7500","2024-01-16","Collection","Mobile Money","Completed","Premium client payment"
+"TXN003","Paul Biya","+237 670 345 678","Sarah Ngono","3200","2024-01-17","Collection","Cash","Completed","Partial payment"
+"TXN004","Sarah Ngono","+237 673 456 789","Paul Biya","12000","2024-01-18","Collection","Bank Transfer","Completed","Full settlement"
+"TXN005","Pierre Mboh","+237 674 567 890","Grace Nkono","2800","2024-01-19","Collection","Mobile Money","Pending","Awaiting confirmation"
+"TXN006","Grace Nkono","+237 675 678 901","Jean-Claude","6800","2024-01-20","Collection","Cash","Completed","Business payment"
+"TXN007","Jean-Claude","+237 676 789 012","Fatima Ali","4100","2024-01-21","Collection","Cash","Completed","Regular collection"
+"TXN008","Fatima Ali","+237 677 890 123","Samuel Wong","9500","2024-01-22","Collection","Mobile Money","Completed","Corporate payment"
+"TXN009","Samuel Wong","+237 678 901 234","Rose Mbeki","15200","2024-01-23","Collection","Bank Transfer","Completed","Large business transaction"
+"TXN010","Rose Mbeki","+237 679 012 345","Jean Dupont","5600","2024-01-24","Collection","Cash","Failed","Payment declined"

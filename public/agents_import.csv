@@ -1,0 +1,11 @@
+agent_name,agent_phone,agent_email,assigned_zone,manager_name,start_date,status,monthly_target,commission_rate
+"Jean Dupont","+237 677 123 456","jean.dupont@procollector.com","Centre Douala","Marie Manager","2024-01-15","Active","2000000","0.05"
+"Marie Smith","+237 699 234 567","marie.smith@procollector.com","Bonanjo, Douala","Paul Director","2024-01-20","Active","1800000","0.04"
+"Paul Biya","+237 670 345 678","paul.biya@procollector.com","Akwa, Douala","Sarah Manager","2024-02-01","Active","2200000","0.06"
+"Sarah Ngono","+237 673 456 789","sarah.ngono@procollector.com","Bastos, Yaoundé","Jean Director","2024-02-10","Active","2500000","0.05"
+"Pierre Mboh","+237 674 567 890","pierre.mboh@procollector.com","Messa, Yaoundé","Marie Manager","2024-02-15","Inactive","1500000","0.03"
+"Grace Nkono","+237 675 678 901","grace.nkono@procollector.com","Deido, Douala","Paul Director","2024-02-20","Active","1900000","0.04"
+"Jean-Claude","+237 676 789 012","jean.claude@procollector.com","Bonapriso, Douala","Sarah Manager","2024-02-25","Active","2100000","0.05"
+"Fatima Ali","+237 677 890 123","fatima.ali@procollector.com","Mvan, Yaoundé","Jean Director","2024-03-01","Active","1850000","0.04"
+"Samuel Wong","+237 678 901 234","samuel.wong@procollector.com","New Bell, Douala","Marie Manager","2024-03-05","Active","2300000","0.06"
+"Rose Mbeki","+237 679 012 345","rose.mbeki@procollector.com","Etoudi, Yaoundé","Paul Director","2024-03-10","Active","2050000","0.05"

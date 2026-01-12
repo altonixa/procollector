@@ -46,7 +46,7 @@ const mockAgents = [
 ];
 
 export function ManagerPortal() {
-  const [tab, setTab] = useState<'dashboard' | 'collectors' | 'agents' | 'reports' | 'alerts'>('dashboard');
+  const [tab, setTab] = useState<'dashboard' | 'collectors' | 'agents' | 'reports' | 'bulk-upload' | 'alerts'>('dashboard');
   const [selectedCollector, setSelectedCollector] = useState<Collector | null>(null);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -117,6 +117,7 @@ export function ManagerPortal() {
               { id: 'collectors', label: 'Collectors' },
               { id: 'agents', label: 'Agents' },
               { id: 'reports', label: 'Reports' },
+              { id: 'bulk-upload', label: 'Bulk Upload' },
               { id: 'alerts', label: 'Alerts' },
             ].map((t) => (
               <button
@@ -487,6 +488,101 @@ export function ManagerPortal() {
                     ))}
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* BULK UPLOAD */}
+          {tab === 'bulk-upload' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Bulk Data Upload</h2>
+                  <p className="text-sm text-gray-600">Upload CSV files to bulk import clients and collectors</p>
+                </div>
+                <div className="flex gap-2">
+                  <a href="/clients_import.csv" download className="px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded hover:bg-blue-700 text-sm font-medium">
+                    Download Clients Template
+                  </a>
+                  <a href="/collectors_import.csv" download className="px-4 py-2 bg-green-600 text-white border border-green-600 rounded hover:bg-green-700 text-sm font-medium">
+                    Download Collectors Template
+                  </a>
+                </div>
+              </div>
+
+              {/* Template Information */}
+              <div className="bg-white border border-gray-200 rounded-lg p-4">
+                <h3 className="text-lg font-semibold mb-3">Available Templates</h3>
+                <div className="grid grid-cols-1 gap-4 text-sm">
+                  <div>
+                    <strong>Clients Template:</strong> client_name, client_phone, client_email, client_address, account_balance, registration_date, client_type, status
+                  </div>
+                  <div>
+                    <strong>Collectors Template:</strong> collector_name, collector_phone, collector_email, assigned_zone, supervisor_name, start_date, status, target_amount, daily_limit
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Upload Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold mb-3 text-blue-900">Upload Clients</h3>
+                  <p className="text-sm text-gray-600 mb-4">Bulk import multiple clients at once</p>
+                  <input
+                    type="file"
+                    accept=".csv,text/csv"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  />
+                  <button className="mt-3 w-full px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded hover:bg-blue-700 text-sm font-medium">
+                    Upload Clients CSV
+                  </button>
+                </div>
+
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold mb-3 text-green-900">Upload Collectors</h3>
+                  <p className="text-sm text-gray-600 mb-4">Bulk import multiple collectors at once</p>
+                  <input
+                    type="file"
+                    accept=".csv,text/csv"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+                  />
+                  <button className="mt-3 w-full px-4 py-2 bg-green-600 text-white border border-green-600 rounded hover:bg-green-700 text-sm font-medium">
+                    Upload Collectors CSV
+                  </button>
+                </div>
+              </div>
+
+              {/* Upload Status */}
+              <div className="bg-white border border-gray-200 rounded-lg p-4">
+                <h3 className="text-lg font-semibold mb-3">Recent Uploads</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <div>
+                      <div className="font-medium">clients_import.csv</div>
+                      <div className="text-sm text-gray-500">25 clients uploaded successfully</div>
+                    </div>
+                    <div className="text-sm text-green-600">Completed</div>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <div>
+                      <div className="font-medium">collectors_import.csv</div>
+                      <div className="text-sm text-gray-500">10 collectors uploaded successfully</div>
+                    </div>
+                    <div className="text-sm text-green-600">Completed</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Instructions */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-blue-900 mb-2">Upload Instructions</h3>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>• Download the appropriate template file for your data type</li>
+                  <li>• Fill in your data following the column headers exactly</li>
+                  <li>• Save as CSV format (comma-separated values)</li>
+                  <li>• Upload the file to validate and import your data</li>
+                  <li>• Review the upload status to confirm successful imports</li>
+                </ul>
               </div>
             </div>
           )}

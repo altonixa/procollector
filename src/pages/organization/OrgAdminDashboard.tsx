@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
-import { Plus, X, Edit, Trash2 } from 'lucide-react';
+import { Plus, X, Edit, Trash2, ChevronDown, Shield } from 'lucide-react';
+import { AuditorModule } from './modules/AuditorModule';
 
 interface Collector {
   id: string;
@@ -21,7 +22,9 @@ interface Client {
 }
 
 export function OrgAdminDashboard() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'collectors' | 'clients' | 'rules'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'collectors' | 'clients' | 'rules' | 'auditor'>('overview');
+  const [auditorDropdownOpen, setAuditorDropdownOpen] = useState(false);
+  const [activeAuditorModule, setActiveAuditorModule] = useState<'audit-portal' | 'audit-logs' | 'compliance'>('audit-portal');
   const [collectors, setCollectors] = useState<Collector[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -373,6 +376,65 @@ export function OrgAdminDashboard() {
                 {tab.label}
               </button>
             ))}
+
+            {/* Auditor Tab with Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setActiveTab('auditor');
+                  setAuditorDropdownOpen(!auditorDropdownOpen);
+                }}
+                className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+                  activeTab === 'auditor'
+                    ? 'border-gray-900 text-gray-900'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <Shield className="h-4 w-4" />
+                Auditor
+                <ChevronDown className={`h-4 w-4 transition-transform ${auditorDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {auditorDropdownOpen && activeTab === 'auditor' && (
+                <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-[200px]">
+                  <div className="py-2">
+                    <button
+                      onClick={() => {
+                        setActiveAuditorModule('audit-portal');
+                        setAuditorDropdownOpen(false);
+                      }}
+                      className={`w-full px-4 py-2 text-sm text-left hover:bg-gray-50 transition-colors ${
+                        activeAuditorModule === 'audit-portal' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                      }`}
+                    >
+                      Audit Portal
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActiveAuditorModule('audit-logs');
+                        setAuditorDropdownOpen(false);
+                      }}
+                      className={`w-full px-4 py-2 text-sm text-left hover:bg-gray-50 transition-colors ${
+                        activeAuditorModule === 'audit-logs' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                      }`}
+                    >
+                      Audit Logs
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActiveAuditorModule('compliance');
+                        setAuditorDropdownOpen(false);
+                      }}
+                      className={`w-full px-4 py-2 text-sm text-left hover:bg-gray-50 transition-colors ${
+                        activeAuditorModule === 'compliance' ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                      }`}
+                    >
+                      Compliance Reports
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -671,8 +733,44 @@ export function OrgAdminDashboard() {
               </div>
             </div>
           )}
+
+          {/* AUDITOR */}
+          {activeTab === 'auditor' && (
+            <div className="space-y-6">
+              {activeAuditorModule === 'audit-portal' && <AuditorModule />}
+              {activeAuditorModule === 'audit-logs' && (
+                <div className="space-y-6">
+                  <h2 className="text-2xl font-bold text-gray-900">Audit Logs</h2>
+                  <Card>
+                    <CardContent className="p-6">
+                      <p className="text-gray-600">Audit logs functionality will be implemented here.</p>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+              {activeAuditorModule === 'compliance' && (
+                <div className="space-y-6">
+                  <h2 className="text-2xl font-bold text-gray-900">Compliance Reports</h2>
+                  <Card>
+                    <CardContent className="p-6">
+                      <p className="text-gray-600">Compliance reports functionality will be implemented here.</p>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-200 bg-gray-50 px-4 py-6 mt-8">
+        <div className="text-center">
+          <p className="text-xs text-gray-500 font-medium">
+            Powered by Altonixa Group Ltd • Multi-tenant Platform
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

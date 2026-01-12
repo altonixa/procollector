@@ -4,6 +4,7 @@ import { Collection, Client, User } from '../models/index.js';
 import { authenticate } from '../middleware/auth.js';
 import { authorize } from '../middleware/authorize.js';
 import { collectionLimiter } from '../middleware/rateLimiter.js';
+import { uploadProof, handleUploadError } from '../middleware/upload.js';
 import { v4 as uuidv4 } from 'uuid';
 import { emailService } from '../services/emailService.js';
 
@@ -114,6 +115,7 @@ router.get('/',
 router.post('/',
     authorize('collector', 'Manager', 'organization', 'admin'),
     collectionLimiter,
+    uploadProof.single('proofImage'),
     [
         body('clientId').isUUID().withMessage('Valid client ID is required'),
         body('amount').isFloat({ min: 0.01 }).withMessage('Amount must be greater than 0'),
@@ -123,6 +125,7 @@ router.post('/',
         body('longitude').optional().isFloat({ min: -180, max: 180 }),
         body('collectedAt').optional().isISO8601()
     ],
+    handleUploadError,
     async (req, res) => {
         try {
             const errors = validationResult(req);
@@ -153,6 +156,12 @@ router.post('/',
             // Generate unique receipt number
             const receiptNumber = `REC-${Date.now()}-${uuidv4().substring(0, 8).toUpperCase()}`;
 
+            // Handle proof image
+            let proofImagePath = null;
+            if (req.file) {
+                proofImagePath = req.file.filename;
+            }
+
             // Create collection
             const collection = await Collection.create({
                 organizationId: req.organizationId,
@@ -165,7 +174,8 @@ router.post('/',
                 longitude,
                 receiptNumber,
                 collectedAt: collectedAt || new Date(),
-                status: 'pending'
+                status: 'pending',
+                metadata: proofImagePath ? { proofImage: proofImagePath } : undefined
             });
 
             // Fetch full collection with associations

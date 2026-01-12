@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
-import { Download, Wallet, X, LogOut, Settings, HelpCircle, Home as HomeIcon, History, FileText, AlertCircle, User } from 'lucide-react';
+import { Download, Wallet, X, LogOut, Settings, HelpCircle, Home as HomeIcon, History, FileText, AlertCircle, User, Loader2 } from 'lucide-react';
 
 interface Payment {
   id: string;
@@ -17,21 +17,91 @@ export function ClientPortal() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [withdrawalAmount, setWithdrawalAmount] = useState('');
   const [withdrawalMethod, setWithdrawalMethod] = useState<'MTN MOMO' | 'Orange Money'>('MTN MOMO');
-  const [disputes, setDisputes] = useState<{ id: string; issue: string; status: string }[]>([]);
-  const [newDispute, setNewDispute] = useState('');
-  const [profile, setProfile] = useState({ name: 'Ahmed Diallo', email: 'ahmed@example.com', phone: '+221771234567' });
-  const [profileEdit, setProfileEdit] = useState(false);
-  const [paymentMethods, setPaymentMethods] = useState({
-    mtnMomo: '+221771234567',
-    orangeMoney: '+221781234567',
-    primary: 'MTN MOMO' as 'MTN MOMO' | 'Orange Money'
-  });
 
-  const payments: Payment[] = [
-    { id: 'PAY001', amount: '50,000', date: '2026-01-08', collector: 'Ahmed Diallo', status: 'Confirmed', method: 'MTN MOMO' },
-    { id: 'PAY002', amount: '75,000', date: '2026-01-07', collector: 'Fatou Ba', status: 'Pending', method: 'Orange Money' },
-    { id: 'PAY003', amount: '100,000', date: '2026-01-05', collector: 'Ahmed Diallo', status: 'Confirmed', method: 'MTN MOMO' },
-  ];
+  // State for API data
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [disputes, setDisputes] = useState<any[]>([]);
+  const [statements, setStatements] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [newDispute, setNewDispute] = useState('');
+  const [profileEdit, setProfileEdit] = useState(false);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('procollector_auth_token');
+      const response = await fetch('/api/v1/client/dashboard', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setDashboardData(data.data);
+      } else {
+        setError(data.error || 'Failed to load dashboard');
+      }
+    } catch (err) {
+      console.error('Dashboard fetch error:', err);
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchTransactions = async () => {
+    try {
+      const token = localStorage.getItem('procollector_auth_token');
+      const response = await fetch('/api/v1/client/transactions', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setTransactions(data.data.transactions);
+      }
+    } catch (err) {
+      console.error('Transactions fetch error:', err);
+    }
+  };
+
+  const fetchDisputes = async () => {
+    try {
+      const token = localStorage.getItem('procollector_auth_token');
+      const response = await fetch('/api/v1/client/disputes', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setDisputes(data.data.disputes);
+      }
+    } catch (err) {
+      console.error('Disputes fetch error:', err);
+    }
+  };
+
+  const handleTabChange = (newTab: typeof tab) => {
+    setTab(newTab);
+    if (newTab === 'history' && transactions.length === 0) {
+      fetchTransactions();
+    }
+    if (newTab === 'disputes' && disputes.length === 0) {
+      fetchDisputes();
+    }
+  };
 
   const handleWithdrawalRequest = () => {
     if (!withdrawalAmount.trim()) return;
@@ -41,16 +111,66 @@ export function ClientPortal() {
     setShowWithdrawalModal(false);
   };
 
-  const submitDispute = () => {
+  const submitDispute = async () => {
     if (!newDispute.trim()) return;
-    setDisputes([{ id: `D-${Date.now()}`, issue: newDispute, status: 'Open' }, ...disputes]);
-    setNewDispute('');
+
+    try {
+      const token = localStorage.getItem('procollector_auth_token');
+      const response = await fetch('/api/v1/client/disputes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          transactionId: 'sample-transaction-id', // This should come from selecting a transaction
+          reason: 'General Dispute',
+          description: newDispute
+        })
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setDisputes([data.data.dispute, ...disputes]);
+        setNewDispute('');
+        alert('Dispute submitted successfully');
+      } else {
+        alert(data.error || 'Failed to submit dispute');
+      }
+    } catch (error) {
+      console.error('Submit dispute error:', error);
+      alert('Failed to submit dispute. Please try again.');
+    }
   };
 
   const handleProfileUpdate = () => {
     alert('Profile updated successfully');
     setProfileEdit(false);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-brand-dustGold flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-brand-dark mx-auto mb-4" />
+          <p className="text-brand-dark font-bold">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-brand-dustGold flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button onClick={fetchDashboardData} className="bg-brand-green text-white px-4 py-2 rounded-lg">
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 lg:bg-white">
@@ -152,7 +272,7 @@ export function ClientPortal() {
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex-1">
             <h1 className="text-lg font-bold text-gray-900">{profile.name}</h1>
-            <p className="text-xs text-gray-600">Account Balance: FCFA 225,000</p>
+              <p className="text-xs text-gray-600">Account Balance: FCFA {dashboardData?.client?.balance?.toLocaleString() || '0'}</p>
           </div>
           <button
             onClick={() => setShowSidebar(true)}
@@ -185,7 +305,7 @@ export function ClientPortal() {
         <div className="hidden lg:block lg:w-56 lg:border-r lg:border-gray-200 lg:bg-gray-50 lg:p-6">
           <nav className="space-y-1">
             <button
-              onClick={() => setTab('overview')}
+              onClick={() => handleTabChange('overview')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 tab === 'overview'
                   ? 'bg-gray-900 text-white'
@@ -195,7 +315,7 @@ export function ClientPortal() {
               <HomeIcon className="w-5 h-5" /> Overview
             </button>
             <button
-              onClick={() => setTab('history')}
+              onClick={() => handleTabChange('history')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 tab === 'history'
                   ? 'bg-gray-900 text-white'
@@ -205,7 +325,7 @@ export function ClientPortal() {
               <History className="w-5 h-5" /> Payment History
             </button>
             <button
-              onClick={() => setTab('statements')}
+              onClick={() => handleTabChange('statements')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 tab === 'statements'
                   ? 'bg-gray-900 text-white'
@@ -215,7 +335,7 @@ export function ClientPortal() {
               <FileText className="w-5 h-5" /> Statements
             </button>
             <button
-              onClick={() => setTab('disputes')}
+              onClick={() => handleTabChange('disputes')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 tab === 'disputes'
                   ? 'bg-gray-900 text-white'
@@ -225,7 +345,7 @@ export function ClientPortal() {
               <AlertCircle className="w-5 h-5" /> Disputes
             </button>
             <button
-              onClick={() => setTab('payment-methods')}
+              onClick={() => handleTabChange('payment-methods')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 tab === 'payment-methods'
                   ? 'bg-gray-900 text-white'
@@ -255,15 +375,15 @@ export function ClientPortal() {
               <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
                 <div className="bg-white rounded-lg p-4 border border-gray-200">
                   <p className="text-xs text-gray-600 mb-1">Total Paid</p>
-                  <p className="text-xl font-bold text-gray-900">225,000</p>
+                  <p className="text-xl font-bold text-gray-900">{dashboardData?.stats?.totalPaid?.toLocaleString() || '0'}</p>
                 </div>
                 <div className="bg-white rounded-lg p-4 border border-gray-200">
                   <p className="text-xs text-gray-600 mb-1">Pending</p>
-                  <p className="text-xl font-bold text-orange-600">75,000</p>
+                  <p className="text-xl font-bold text-orange-600">{dashboardData?.stats?.pendingPayments || '0'}</p>
                 </div>
                 <div className="bg-white rounded-lg p-4 border border-gray-200 col-span-2 lg:col-span-1">
                   <p className="text-xs text-gray-600 mb-1">Available</p>
-                  <p className="text-xl font-bold text-green-600">150,000</p>
+                  <p className="text-xl font-bold text-green-600">{(dashboardData?.client?.balance || 0).toLocaleString()}</p>
                 </div>
               </div>
 
@@ -284,20 +404,24 @@ export function ClientPortal() {
               <div className="bg-white rounded-lg border border-gray-200 p-4">
                 <h3 className="font-semibold text-gray-900 mb-4">Recent Payments</h3>
                 <div className="space-y-3">
-                  {payments.map((payment) => (
-                    <div key={payment.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                  {dashboardData?.recentTransactions?.map((transaction) => (
+                    <div key={transaction.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
                       <div>
-                        <p className="font-medium text-gray-900 text-sm">{payment.collector}</p>
-                        <p className="text-xs text-gray-600">{payment.date}</p>
+                        <p className="font-medium text-gray-900 text-sm">{transaction.collector}</p>
+                        <p className="text-xs text-gray-600">{new Date(transaction.time).toLocaleDateString()}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-bold text-gray-900">FCFA {payment.amount}</p>
-                        <span className={`text-xs px-2 py-0.5 rounded-full ${payment.status === 'Confirmed' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
-                          {payment.status}
+                        <p className="font-bold text-gray-900">{transaction.amount}</p>
+                        <span className={`text-xs px-2 py-0.5 rounded-full ${transaction.status === 'verified' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
+                          {transaction.status}
                         </span>
                       </div>
                     </div>
-                  ))}
+                  )) || (
+                    <div className="text-center py-4 text-gray-500">
+                      <p className="text-sm">No recent transactions</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -306,24 +430,29 @@ export function ClientPortal() {
           {tab === 'history' && (
             <div className="space-y-3 pb-20 lg:pb-0">
               <h2 className="text-xl font-bold text-gray-900 lg:hidden">Payment History</h2>
-              {payments.map((payment) => (
-                <Card key={payment.id}>
+              {transactions.length > 0 ? transactions.map((transaction) => (
+                <Card key={transaction.id}>
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium text-gray-900">{payment.collector}</p>
-                        <p className="text-sm text-gray-600">{payment.date} • {payment.method}</p>
+                        <p className="font-medium text-gray-900">{transaction.collector}</p>
+                        <p className="text-sm text-gray-600">{new Date(transaction.collectedAt).toLocaleDateString()} • {transaction.paymentMethod}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-bold text-gray-900">FCFA {payment.amount}</p>
-                        <span className={`text-xs px-2 py-1 rounded inline-block mt-1 ${payment.status === 'Confirmed' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
-                          {payment.status}
+                        <p className="font-bold text-gray-900">FCFA {transaction.amount.toLocaleString()}</p>
+                        <span className={`text-xs px-2 py-1 rounded inline-block mt-1 ${transaction.status === 'verified' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
+                          {transaction.status}
                         </span>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-              ))}
+              )) : (
+                <div className="text-center py-8 text-gray-500">
+                  <History className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                  <p className="text-sm">No payment history available</p>
+                </div>
+              )}
             </div>
           )}
 
@@ -372,10 +501,15 @@ export function ClientPortal() {
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="font-medium text-gray-900">{dispute.issue}</p>
-                            <p className="text-sm text-gray-600">{dispute.id}</p>
+                            <p className="font-medium text-gray-900">{dispute.reason}: {dispute.description}</p>
+                            <p className="text-sm text-gray-600">Transaction: {dispute.transaction?.amount} FCFA</p>
+                            <p className="text-xs text-gray-500">Filed: {new Date(dispute.createdAt).toLocaleDateString()}</p>
                           </div>
-                          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            dispute.status === 'pending' ? 'bg-orange-100 text-orange-700' :
+                            dispute.status === 'resolved' ? 'bg-green-100 text-green-700' :
+                            'bg-blue-100 text-blue-700'
+                          }`}>
                             {dispute.status}
                           </span>
                         </div>
@@ -582,6 +716,15 @@ export function ClientPortal() {
           </button>
         </div>
       </nav>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-200 bg-gray-50 px-4 py-6 mt-8">
+        <div className="text-center">
+          <p className="text-xs text-gray-500 font-medium">
+            Powered by Altonixa Group Ltd • Secure & Auditable
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

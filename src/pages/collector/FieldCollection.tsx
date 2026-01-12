@@ -6,7 +6,7 @@ import { cn } from '../../lib/utils';
 import { offlineStorage, type PendingCollection } from '../../lib/offlineStorage';
 import { v4 as uuidv4 } from 'uuid';
 
-const API_URL = 'http://localhost:5000/api/v1';
+const API_URL = '/api/v1';
 
 export default function FieldCollection() {
     const [view, setView] = useState<'dashboard' | 'select-client' | 'enter-collection'>('select-client');
@@ -21,15 +21,10 @@ export default function FieldCollection() {
     const [isOnline, setIsOnline] = useState(navigator.onLine);
     const [pendingCount, setPendingCount] = useState(0);
     const [isSyncing, setIsSyncing] = useState(false);
+    const [clients, setClients] = useState<any[]>([]);
+    const [loadingClients, setLoadingClients] = useState(true);
 
     const { location, isLoading: geoLoading, error: geoError, captureLocation } = useGeolocation();
-
-    const [clients] = useState([
-        { id: '1', name: 'Boutique Alpha', quarter: 'Mokolo' },
-        { id: '2', name: 'Pharmacie De La Paix', quarter: 'Akwa' },
-        { id: '3', name: 'Gare Routière B', quarter: 'Ndokoti' },
-        { id: '4', name: 'Marché Central A', quarter: 'New Bell' },
-    ]);
 
     useEffect(() => {
         const handleOnline = () => setIsOnline(true);
@@ -37,11 +32,35 @@ export default function FieldCollection() {
         window.addEventListener('online', handleOnline);
         window.addEventListener('offline', handleOffline);
         refreshPendingCount();
+        fetchClients();
         return () => {
             window.removeEventListener('online', handleOnline);
             window.removeEventListener('offline', handleOffline);
         };
     }, []);
+
+    const fetchClients = async () => {
+        try {
+            setLoadingClients(true);
+            const token = localStorage.getItem('procollector_auth_token');
+            const response = await fetch(`${API_URL}/collector/clients`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+            if (response.ok && data.success) {
+                setClients(data.data.clients);
+            } else {
+                console.error('Failed to fetch clients:', data.error);
+            }
+        } catch (error) {
+            console.error('Fetch clients error:', error);
+        } finally {
+            setLoadingClients(false);
+        }
+    };
 
     const refreshPendingCount = async () => {
         const count = await offlineStorage.getPendingCount();
@@ -54,8 +73,37 @@ export default function FieldCollection() {
         try {
             const pending = await offlineStorage.getPendingCollections();
             for (const item of pending) {
+                try {
+                    // Create FormData for file upload
+                    const formData = new FormData();
+                    formData.append('clientId', item.clientId);
+                    formData.append('amount', item.amount.toString());
+                    formData.append('paymentMethod', item.paymentMethod);
+                    formData.append('description', item.description);
+                    if (item.latitude && item.longitude) {
+                        formData.append('latitude', item.latitude.toString());
+                        formData.append('longitude', item.longitude.toString());
+                    }
+                    if (item.proofFile) {
+                        formData.append('proofImage', item.proofFile);
+                    }
+
+                    const token = localStorage.getItem('procollector_auth_token');
+                    const response = await fetch(`${API_URL}/collector/collections`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        await offlineStorage.removeCollection(item.id);
+                    }
+                } catch (error) {
+                    console.error(`Failed to sync collection ${item.id}:`, error);
+                }
                 await new Promise(resolve => setTimeout(resolve, 500));
-                await offlineStorage.removeCollection(item.id);
             }
             await refreshPendingCount();
         } catch (error) {
@@ -81,25 +129,44 @@ export default function FieldCollection() {
                 paymentMethod,
                 collectedAt: new Date().toISOString(),
                 status: 'pending_sync',
-                ...(location ? { latitude: location.latitude, longitude: location.longitude } : {})
+                ...(location ? { latitude: location.latitude, longitude: location.longitude } : {}),
+                ...(proofFile ? { proofFile, proofFileName: proofFile.name } : {})
             };
 
             if (isOnline) {
                 try {
-                    const response = await fetch(`${API_URL}/collections`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(collectionData)
-                    });
+                    const token = localStorage.getItem('procollector_auth_token');
 
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                    // Create FormData for file upload
+                    const formData = new FormData();
+                    formData.append('clientId', selectedClient.id);
+                    formData.append('amount', amount);
+                    formData.append('paymentMethod', paymentMethod);
+                    formData.append('description', `Collection from ${selectedClient.name}`);
+                    if (location) {
+                        formData.append('latitude', location.latitude.toString());
+                        formData.append('longitude', location.longitude.toString());
+                    }
+                    if (proofFile) {
+                        formData.append('proofImage', proofFile);
                     }
 
+                    const response = await fetch(`${API_URL}/collector/collections`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: formData
+                    });
+
                     const result = await response.json();
-                    console.log("Collection submitted successfully:", result);
+
+                    if (response.ok && result.success) {
+                        console.log("Collection submitted successfully:", result);
+                        setSuccessMessage(`Collection submitted successfully! Receipt: ${result.data.collection.receiptNumber}`);
+                    } else {
+                        throw new Error(result.error || 'Failed to submit collection');
+                    }
                 } catch (error) {
                     console.error("Failed to submit collection:", error);
                     await offlineStorage.saveCollection(collectionData);
@@ -253,7 +320,7 @@ export default function FieldCollection() {
                                             className="w-full text-left py-3 px-4 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"
                                         >
                                             <div className="font-medium text-gray-900">{client.name}</div>
-                                            <div className="text-sm text-gray-500">{client.quarter}</div>
+                                            <div className="text-sm text-gray-500">{client.address || client.phone || 'No address'}</div>
                                         </button>
                                     </li>
                                 ))}
@@ -271,7 +338,7 @@ export default function FieldCollection() {
                                 </div>
                                 <div>
                                     <p className="font-semibold text-slate-900">{selectedClient.name}</p>
-                                    <p className="text-sm text-slate-500">{selectedClient.quarter}</p>
+                                    <p className="text-sm text-slate-500">{selectedClient.address || selectedClient.phone || 'No address'}</p>
                                 </div>
                             </div>
 
@@ -372,6 +439,15 @@ export default function FieldCollection() {
                     )}
                 </div>
             </main>
+
+            {/* Footer */}
+            <footer className="border-t border-slate-200 bg-slate-50 px-4 py-3">
+              <div className="text-center">
+                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+                  Powered by Altonixa Group Ltd • GPS Enabled
+                </p>
+              </div>
+            </footer>
         </div>
     );
 }

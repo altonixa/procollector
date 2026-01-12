@@ -101,7 +101,34 @@ export function ReceiptVerification() {
                                     </code>
                                 </div>
 
-                                <Button className="w-full">Download Receipt (PDF)</Button>
+                                <Button className="w-full" onClick={async () => {
+                                    try {
+                                        // Use the receipt PDF download endpoint
+                                        const token = localStorage.getItem('procollector_auth_token');
+                                        const response = await fetch(`/api/v1/exports/receipt/${result.id}/pdf`, {
+                                            headers: {
+                                                'Authorization': `Bearer ${token}`
+                                            }
+                                        });
+
+                                        if (response.ok) {
+                                            const blob = await response.blob();
+                                            const url = window.URL.createObjectURL(blob);
+                                            const a = document.createElement('a');
+                                            a.href = url;
+                                            a.download = `receipt_${result.id}.pdf`;
+                                            document.body.appendChild(a);
+                                            a.click();
+                                            window.URL.revokeObjectURL(url);
+                                            document.body.removeChild(a);
+                                        } else {
+                                            alert('Receipt not found or access denied.');
+                                        }
+                                    } catch (error) {
+                                        console.error('Receipt download error:', error);
+                                        alert('Failed to download receipt. Please try again.');
+                                    }
+                                }}>Download Receipt (PDF)</Button>
                             </div>
                         )}
                     </CardContent>

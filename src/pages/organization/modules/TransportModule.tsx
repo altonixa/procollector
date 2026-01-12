@@ -1,125 +1,199 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
-import { Bus, MapPin, Users, Calendar, AlertCircle, Plus, ChevronRight, Settings, Info } from 'lucide-react';
-import { cn } from '../../../lib/utils';
+import { Bus, Plus, Settings } from 'lucide-react';
+
+interface Vehicle {
+  id: string;
+  type: string;
+  capacity: number;
+  status: 'active' | 'maintenance' | 'inactive';
+  driver?: string;
+  location?: string;
+}
 
 export function TransportModule() {
-    const [activeTab, setActiveTab] = useState<'fleet' | 'routes' | 'bookings'>('fleet');
+  const [activeTab, setActiveTab] = useState<'fleet' | 'routes' | 'bookings'>('fleet');
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    fetchVehicles();
+  }, []);
+
+  const fetchVehicles = async () => {
+    try {
+      setLoading(true);
+      // TODO: Implement real API call
+      setVehicles([
+        {
+          id: 'VH-001',
+          type: 'Bus',
+          capacity: 50,
+          status: 'active',
+          driver: 'Jean Dupont',
+          location: 'Douala Central'
+        },
+        {
+          id: 'VH-002',
+          type: 'Taxi',
+          capacity: 4,
+          status: 'active',
+          driver: 'Marie Kline',
+          location: 'Akwa Market'
+        }
+      ]);
+    } catch (error) {
+      console.error('Vehicles fetch error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return 'bg-green-100 text-green-700';
+      case 'maintenance': return 'bg-yellow-100 text-yellow-700';
+      case 'inactive': return 'bg-red-100 text-red-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  if (loading) {
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Fleet & Logistics</h2>
-                    <p className="text-sm text-gray-600 mt-1">Smart Transport Management System</p>
-                    <div className="flex items-center gap-4 mt-3">
-                        <div className="flex items-center gap-2 text-xs text-gray-600">
-                            <Users className="h-4 w-4" />
-                            <span>Loading... Active Users</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-gray-600">
-                            <Calendar className="h-4 w-4" />
-                            <span>Real-time Scheduling</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex items-center gap-3">
-                    <Button variant="outline" className="h-9 px-3 text-sm">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Config
-                    </Button>
-                    <Button className="h-9 px-4 bg-gray-900 hover:bg-gray-800 text-white text-sm">
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Vehicle
-                    </Button>
-                </div>
-            </div>
-
-            <div className="flex border-b border-gray-200">
-                {(['fleet', 'routes', 'bookings'] as const).map((tab) => (
-                    <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-                            activeTab === tab
-                                ? 'border-gray-900 text-gray-900'
-                                : 'border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                        }`}
-                    >
-                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </button>
-                ))}
-            </div>
-
-            {activeTab === 'fleet' && (
-                <div className="space-y-6">
-                    <div className="flex justify-between items-center">
-                        <h3 className="text-lg font-semibold text-gray-900">Fleet Overview</h3>
-                        <Button className="h-9 px-4 bg-gray-900 hover:bg-gray-800 text-white text-sm">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add Vehicle
-                        </Button>
-                    </div>
-
-                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                        <table className="w-full">
-                            <thead>
-                                <tr className="bg-gray-50 border-b border-gray-200">
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Vehicle ID</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Type</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Capacity</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Status</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Driver</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Location</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {[
-                                    { id: 'Loading...', type: 'Loading...', capacity: 'Loading...', status: 'Loading...', driver: 'Loading...', location: 'Loading...' }
-                                ].map((vehicle, i) => (
-                                    <tr key={i} className="border-b border-gray-100 hover:bg-gray-50">
-                                        <td className="px-4 py-3 text-sm font-medium text-gray-900">{vehicle.id}</td>
-                                        <td className="px-4 py-3 text-sm text-gray-600">{vehicle.type}</td>
-                                        <td className="px-4 py-3 text-sm text-gray-600">{vehicle.capacity}</td>
-                                        <td className="px-4 py-3 text-sm">
-                                            <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
-                                                {vehicle.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 py-3 text-sm text-gray-600">{vehicle.driver}</td>
-                                        <td className="px-4 py-3 text-sm text-gray-600">{vehicle.location}</td>
-                                        <td className="px-4 py-3">
-                                            <div className="flex gap-2">
-                                                <Button size="sm" variant="outline">Edit</Button>
-                                                <Button size="sm" variant="outline">View</Button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            )}
-
-            {/* Additional tabs would be implemented similarly */}
-            {activeTab !== 'fleet' && (
-                <div className="bg-white border border-gray-200 rounded-lg p-8 text-center space-y-4">
-                    <div className="h-16 w-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto">
-                        <AlertCircle className="h-8 w-8 text-yellow-600" />
-                    </div>
-                    <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Module Under Development</h3>
-                        <p className="text-sm text-gray-600 mt-2">The {activeTab} section is currently being implemented.</p>
-                    </div>
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
-                        <p className="text-xs font-medium text-yellow-800 uppercase tracking-wide">Coming Soon</p>
-                        <p className="text-sm text-yellow-700 mt-1">This feature will be available in the next update.</p>
-                    </div>
-                </div>
-            )}
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="text-gray-600 mt-2">Loading transport module...</p>
         </div>
+      </div>
     );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto p-4">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Transport Module</h1>
+            <p className="text-gray-600">Fleet and transport management</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Settings className="w-4 h-4 mr-2" />
+              Settings
+            </Button>
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Vehicle
+            </Button>
+          </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="flex bg-white rounded-lg border border-gray-200 p-1 mb-6">
+          {[
+            { id: 'fleet', label: 'Fleet' },
+            { id: 'routes', label: 'Routes' },
+            { id: 'bookings', label: 'Bookings' }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                activeTab === tab.id
+                  ? 'bg-gray-900 text-white'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        {activeTab === 'fleet' && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg font-semibold text-gray-900">Fleet Management</h2>
+              <Button>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Vehicle
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              {vehicles.map((vehicle) => (
+                <Card key={vehicle.id}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Bus className="h-6 w-6 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-gray-900">{vehicle.id}</h3>
+                          <p className="text-sm text-gray-600">{vehicle.type} • Capacity: {vehicle.capacity}</p>
+                          {vehicle.driver && (
+                            <p className="text-sm text-gray-600">Driver: {vehicle.driver}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium mb-2 block ${getStatusColor(vehicle.status)}`}>
+                          {vehicle.status}
+                        </span>
+                        {vehicle.location && (
+                          <p className="text-sm text-gray-600">{vehicle.location}</p>
+                        )}
+                        <div className="flex gap-2 mt-2">
+                          <Button variant="outline" size="sm">Edit</Button>
+                          <Button variant="outline" size="sm">View</Button>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {vehicles.length === 0 && (
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <Bus className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600">No vehicles in fleet</p>
+                  <Button className="mt-4">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add First Vehicle
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
+
+        {(activeTab === 'routes' || activeTab === 'bookings') && (
+          <Card>
+            <CardContent className="p-8 text-center">
+              <Bus className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Management</h3>
+              <p className="text-gray-600 mb-4">This feature is under development</p>
+              <Button variant="outline">Coming Soon</Button>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-200 bg-gray-50 px-4 py-6 mt-8">
+        <div className="text-center">
+          <p className="text-xs text-gray-500 font-medium">
+            Powered by Altonixa Group Ltd • Fleet Management
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
 }

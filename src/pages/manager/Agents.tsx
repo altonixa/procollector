@@ -1,107 +1,182 @@
-import { UserPlus, Search, MoreVertical, MapPin, Phone } from 'lucide-react';
-import { Card, CardContent, CardHeader } from '../../components/ui/Card';
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { cn } from '../../lib/utils';
+import { Users, Search, Plus, Edit, Trash2 } from 'lucide-react';
 
-const mockAgents = [
-    { id: '1', name: 'Jean Dupont', email: 'jean.d@procollector.com', phone: '+237 670-000-111', zone: 'Akwa, Douala', status: 'Active', collections: '1.2M', lastActive: '2 mins ago' },
-    { id: '2', name: 'Marie Kline', email: 'marie.k@procollector.com', phone: '+237 671-222-333', zone: 'Bonanjo, Douala', status: 'Active', collections: '850K', lastActive: '15 mins ago' },
-    { id: '3', name: 'Paul Biya II', email: 'paul.b@procollector.com', phone: '+237 672-333-444', zone: 'Bastos, Yaoundé', status: 'Inactive', collections: '0', lastActive: '2 days ago' },
-    { id: '4', name: 'Sarah Ngono', email: 'sarah.n@procollector.com', phone: '+237 673-444-555', zone: 'Messa, Yaoundé', status: 'Active', collections: '450K', lastActive: '1 hr ago' },
-];
+interface Agent {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  status: 'active' | 'inactive';
+  assignedClients: number;
+  todayCollections: number;
+  performance: 'excellent' | 'good' | 'needs_improvement';
+}
 
 export function Agents() {
-    return (
-        <div className="space-y-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h2 className="text-3xl font-black tracking-tighter text-brand-dark uppercase">Agents</h2>
-                    <p className="text-brand-dark/60 mt-1 font-bold">Manage and monitor your field collectors in real-time.</p>
-                </div>
-                <Button variant="secondary" className="w-full md:w-auto shadow-lg shadow-black/10">
-                    <UserPlus className="mr-2 h-4 w-4" /> Add New Agent
-                </Button>
-            </div>
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
-            {/* Filters / Search */}
-            <Card className="bg-white/50 border-brand-dark/5 backdrop-blur-sm shadow-sm">
-                <CardContent className="p-4 flex flex-col md:flex-row gap-4">
-                    <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-dark/30" />
-                        <input
-                            type="text"
-                            placeholder="Search by name, zone, or email..."
-                            className="w-full pl-10 pr-4 py-2 bg-brand-dark/5 border border-brand-dark/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green/20 text-brand-dark font-bold placeholder:text-brand-dark/30"
-                        />
+  useEffect(() => {
+    fetchAgents();
+  }, []);
+
+  const fetchAgents = async () => {
+    try {
+      setLoading(true);
+      // TODO: Implement real API call
+      setAgents([
+        {
+          id: '1',
+          name: 'Jean Dupont',
+          email: 'jean@example.com',
+          phone: '+237 677 123 456',
+          status: 'active',
+          assignedClients: 25,
+          todayCollections: 125000,
+          performance: 'excellent'
+        },
+        {
+          id: '2',
+          name: 'Marie Kline',
+          email: 'marie@example.com',
+          phone: '+237 699 234 567',
+          status: 'active',
+          assignedClients: 18,
+          todayCollections: 89000,
+          performance: 'good'
+        }
+      ]);
+    } catch (error) {
+      console.error('Agents fetch error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredAgents = agents.filter(agent =>
+    agent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    agent.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const getPerformanceColor = (performance: string) => {
+    switch (performance) {
+      case 'excellent': return 'bg-green-100 text-green-700';
+      case 'good': return 'bg-blue-100 text-blue-700';
+      case 'needs_improvement': return 'bg-yellow-100 text-yellow-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="text-gray-600 mt-2">Loading agents...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-4xl mx-auto p-4">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Agent Management</h1>
+            <p className="text-gray-600">Manage field collectors and monitor performance</p>
+          </div>
+          <Button className="flex items-center gap-2">
+            <Plus className="w-4 h-4" />
+            Add Agent
+          </Button>
+        </div>
+
+        {/* Search */}
+        <Card className="mb-6">
+          <CardContent className="p-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input
+                type="text"
+                placeholder="Search agents..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Agents List */}
+        <div className="space-y-4">
+          {filteredAgents.map((agent) => (
+            <Card key={agent.id}>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 bg-gray-100 rounded-lg flex items-center justify-center font-medium text-gray-900">
+                      {agent.name.charAt(0)}
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-gray-900">{agent.name}</h3>
+                      <p className="text-sm text-gray-600">{agent.email}</p>
+                      <p className="text-sm text-gray-600">{agent.phone}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-6">
+                    <div className="text-center">
+                      <p className="text-sm text-gray-600">Clients</p>
+                      <p className="font-medium text-gray-900">{agent.assignedClients}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm text-gray-600">Today</p>
+                      <p className="font-medium text-gray-900">FCFA {agent.todayCollections.toLocaleString()}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm text-gray-600">Performance</p>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPerformanceColor(agent.performance)}`}>
+                        {agent.performance.replace('_', ' ')}
+                      </span>
                     </div>
                     <div className="flex gap-2">
-                        <select className="px-4 py-2 bg-brand-dark/5 border border-brand-dark/10 rounded-lg text-sm font-black uppercase tracking-wider text-brand-dark">
-                            <option>All Statuses</option>
-                            <option>Active</option>
-                            <option>Inactive</option>
-                        </select>
-                        <select className="px-4 py-2 bg-brand-dark/5 border border-brand-dark/10 rounded-lg text-sm font-black uppercase tracking-wider text-brand-dark">
-                            <option>All Zones</option>
-                            <option>Douala</option>
-                            <option>Yaoundé</option>
-                        </select>
+                      <Button variant="outline" size="sm">
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </div>
-                </CardContent>
+                  </div>
+                </div>
+              </CardContent>
             </Card>
-
-            {/* Agents Table/Grid */}
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {mockAgents.map((agent) => (
-                    <Card key={agent.id} className="hover:shadow-premium transition-all border-brand-dark/5 bg-white group overflow-hidden">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 border-b border-brand-dark/5">
-                            <div className="flex items-center gap-3">
-                                <div className="h-12 w-12 rounded-full bg-brand-green flex items-center justify-center text-brand-dark font-black shadow-sm group-hover:scale-110 transition-transform">
-                                    {agent.name.charAt(0)}
-                                </div>
-                                <div>
-                                    <h3 className="text-base font-black text-brand-dark tracking-tight leading-none mb-1">{agent.name}</h3>
-                                    <p className="text-[10px] text-brand-green font-black uppercase tracking-widest">Field Collector</p>
-                                </div>
-                            </div>
-                            <Button variant="ghost" size="icon" className="h-10 w-10 text-brand-dark/20 hover:text-brand-dark hover:bg-brand-dark/5">
-                                <MoreVertical className="h-5 w-5" />
-                            </Button>
-                        </CardHeader>
-                        <CardContent className="pt-6 space-y-6">
-                            <div className="grid grid-cols-1 gap-3">
-                                <div className="flex items-center gap-2 text-sm font-bold text-brand-dark/60">
-                                    <MapPin className="h-4 w-4 text-brand-green" />
-                                    {agent.zone}
-                                </div>
-                                <div className="flex items-center gap-2 text-sm font-bold text-brand-dark/60">
-                                    <Phone className="h-4 w-4 text-brand-green" />
-                                    {agent.phone}
-                                </div>
-                            </div>
-
-                            <div className="p-4 bg-brand-dustGold-light rounded-2xl border border-brand-dark/5 flex justify-between items-center shadow-inner">
-                                <div>
-                                    <p className="text-[10px] uppercase font-black text-brand-dark/40 tracking-widest mb-1">Today's collections</p>
-                                    <p className="text-xl font-black text-brand-dark tracking-tighter">FCFA {agent.collections}</p>
-                                </div>
-                                <div className={cn(
-                                    "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm",
-                                    agent.status === 'Active' ? "bg-brand-green text-brand-dark" : "bg-brand-dark text-white"
-                                )}>
-                                    {agent.status}
-                                </div>
-                            </div>
-
-                            <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest pt-2 border-t border-brand-dark/5">
-                                <span className="text-brand-dark/30 italic">Active {agent.lastActive}</span>
-                                <Button variant="ghost" size="sm" className="h-8 text-[10px] text-brand-dark hover:text-brand-green hover:bg-brand-green/10 transition-colors uppercase font-black tracking-widest">
-                                    Track Activity
-                                </Button>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
+          ))}
         </div>
-    );
+
+        {filteredAgents.length === 0 && (
+          <Card>
+            <CardContent className="p-8 text-center">
+              <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">No agents found</p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-200 bg-gray-50 px-4 py-6 mt-8">
+        <div className="text-center">
+          <p className="text-xs text-gray-500 font-medium">
+            Powered by Altonixa Group Ltd • Agent Management
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
 }

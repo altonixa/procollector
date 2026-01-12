@@ -1,3 +1,0 @@
-client_phone,transaction_type,amount,date,reference,note
-+237600000000,deposit,15000,2025-12-19,REF-001,Initial balance
-+237600000001,withdrawal,5000,2025-12-18,REF-002,Partial payout

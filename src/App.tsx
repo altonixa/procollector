@@ -15,7 +15,6 @@ import { DemoLanding } from './pages/public/DemoLanding';
 import { DemoTest } from './pages/public/DemoTest';
 import { Signup } from './pages/public/Signup';
 import { ForgotPassword } from './pages/public/ForgotPassword';
-import { AuditorPortal } from './pages/auditor/AuditorPortal';
 import { Home } from './pages/public/Home';
 import { Features } from './pages/public/Features';
 import { Pricing } from './pages/public/Pricing';
@@ -38,6 +37,7 @@ import { Reports } from './pages/organization/Reports';
 import { TransportModule } from './pages/organization/modules/TransportModule';
 import { HostelModule } from './pages/organization/modules/HostelModule';
 import { InventoryModule } from './pages/organization/modules/InventoryModule';
+import { AuditorModule } from './pages/organization/modules/AuditorModule';
 import { Branches } from './pages/organization/Branches';
 
 // Collector Portal Pages
@@ -57,13 +57,9 @@ import { ClientPortal } from './pages/client/ClientPortal';
 import { ReceiptVerification } from './pages/client/ReceiptVerification';
 
 // Manager Portal Pages
-import { ManagerPortal } from './pages/manager/ManagerPortal';
+import { SupervisorPortal } from './pages/manager/SupervisorPortal';
 import { Agents } from './pages/manager/Agents';
-import LiveMonitoring from './pages/manager/LiveMonitoring';
-import { Collectors } from './pages/manager/Collectors';
 
-// Supervisor Portal Pages
-import SupervisorPortal from './pages/supervisor/SupervisorPortal';
 
 
 // Layout for the Protected App (Dashboard)
@@ -123,6 +119,7 @@ function App() {
             <Route path="transport" element={<ProtectedRoute requiredRole="organization"><TransportModule /></ProtectedRoute>} />
             <Route path="hostel" element={<ProtectedRoute requiredRole="organization"><HostelModule /></ProtectedRoute>} />
             <Route path="inventory" element={<ProtectedRoute requiredRole="organization"><InventoryModule /></ProtectedRoute>} />
+            <Route path="auditor" element={<ProtectedRoute requiredRole="organization"><AuditorModule /></ProtectedRoute>} />
           </Route>
 
           {/* Collector Portal */}
@@ -145,8 +142,6 @@ function App() {
             <Route index element={<Overview />} />
             <Route path="settings" element={<Settings />} />
           </Route>
-          {/* Auditor Portal */}
-          <Route path="/auditor" element={<ProtectedRoute requiredRole="auditor"><AuditorPortal /></ProtectedRoute>} />
 
           {/* Client Portal */}
           <Route path="/client" element={<ProtectedRoute requiredRole="client"><ClientPortal /></ProtectedRoute>} />
@@ -154,19 +149,10 @@ function App() {
 
           {/* Manager Portal */}
           <Route path="/manager" element={<ProtectedRoute requiredRole="manager"><DashboardLayout /></ProtectedRoute>}>
-            <Route index element={<ProtectedRoute requiredRole="manager"><ManagerPortal /></ProtectedRoute>} />
-            <Route path="collectors" element={<ProtectedRoute requiredRole="manager"><Collectors /></ProtectedRoute>} />
+            <Route index element={<ProtectedRoute requiredRole="manager"><SupervisorPortal /></ProtectedRoute>} />
             <Route path="agents" element={<ProtectedRoute requiredRole="manager"><Agents /></ProtectedRoute>} />
-            <Route path="monitoring" element={<ProtectedRoute requiredRole="manager"><LiveMonitoring /></ProtectedRoute>} />
           </Route>
 
-          {/* Supervisor Portal */}
-          <Route path="/supervisor" element={<ProtectedRoute requiredRole="supervisor"><DashboardLayout /></ProtectedRoute>}>
-            <Route index element={<ProtectedRoute requiredRole="supervisor"><SupervisorPortal /></ProtectedRoute>} />
-            <Route path="collectors" element={<ProtectedRoute requiredRole="supervisor"><Collectors /></ProtectedRoute>} />
-            <Route path="agents" element={<ProtectedRoute requiredRole="supervisor"><Agents /></ProtectedRoute>} />
-            <Route path="monitoring" element={<ProtectedRoute requiredRole="supervisor"><LiveMonitoring /></ProtectedRoute>} />
-          </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

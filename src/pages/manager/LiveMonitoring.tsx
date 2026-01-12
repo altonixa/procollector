@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { MapPin, Wifi, WifiOff, Clock, User, AlertTriangle } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
-import 'leaflet/dist/leaflet.css';
-
-// Fix for default markers in react-leaflet
-import L from 'leaflet';
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
 
 export default function LiveMonitoring() {
   const [agents, setAgents] = useState([
@@ -100,51 +89,58 @@ export default function LiveMonitoring() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Map Section */}
-        <div className="lg:col-span-2 bg-white border border-gray-200 p-4">
+        <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 p-6">
           <h2 className="text-lg font-semibold mb-4">Live Map</h2>
-          <div style={{ height: '400px', width: '100%', position: 'relative' }}>
-            <MapContainer center={[4.0489, 9.7040]} zoom={13} style={{ height: '100%', width: '100%' }}>
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            {agents.map((agent) => (
-              <Marker key={agent.id} position={[agent.location.lat, agent.location.lng]}>
-                <Popup>
-                  <div>
-                    <strong>{agent.name}</strong><br />
-                    Status: {agent.isOnline ? 'Online' : 'Offline'}<br />
-                    Current Client: {agent.currentClient}<br />
-                    Last Update: {agent.lastUpdate}
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-            </MapContainer>
+          <div className="bg-gray-100 rounded-lg h-96 flex items-center justify-center">
+            <div className="text-center text-gray-500">
+              <MapPin className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+              <p>Interactive Map View</p>
+              <p className="text-sm">Agents shown as blue dots</p>
+            </div>
           </div>
         </div>
 
         {/* Agent List */}
-        <div className="bg-white border border-gray-200 p-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
           <h2 className="text-lg font-semibold mb-4">Agent Status</h2>
-          <div className="space-y-2">
+          <div className="space-y-4">
             {agents.map((agent) => (
               <div
                 key={agent.id}
-                className={`p-3 border cursor-pointer ${
-                  selectedAgent === agent.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                  selectedAgent === agent.id
+                    ? 'border-blue-300 bg-blue-50'
+                    : agent.isOnline
+                    ? 'border-green-200 bg-green-50 hover:border-green-300'
+                    : 'border-red-200 bg-red-50 hover:border-red-300'
                 }`}
                 onClick={() => setSelectedAgent(agent.id)}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className={`w-2 h-2 rounded-full ${agent.isOnline ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-3 h-3 rounded-full ${
+                      agent.isOnline ? 'bg-green-500' : 'bg-red-500'
+                    }`}></div>
                     <span className="font-medium text-gray-900">{agent.name}</span>
                   </div>
-                  <div className="text-xs text-gray-500">{agent.lastUpdate}</div>
+                  <div className="flex items-center space-x-2">
+                    {agent.isOnline ? (
+                      <Wifi className="w-4 h-4 text-green-600" />
+                    ) : (
+                      <WifiOff className="w-4 h-4 text-red-600" />
+                    )}
+                    <span className="text-xs text-gray-500">{agent.lastUpdate}</span>
+                  </div>
                 </div>
-                <div className="text-sm text-gray-600 mt-1">
-                  Current: {agent.currentClient}
+                <div className="text-sm text-gray-600">
+                  <div className="flex items-center space-x-2">
+                    <User className="w-4 h-4" />
+                    <span>Current: {agent.currentClient}</span>
+                  </div>
+                  <div className="flex items-center space-x-2 mt-1">
+                    <MapPin className="w-4 h-4" />
+                    <span>Location: {agent.location.lat.toFixed(4)}, {agent.location.lng.toFixed(4)}</span>
+                  </div>
                 </div>
               </div>
             ))}

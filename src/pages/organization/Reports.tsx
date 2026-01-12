@@ -5,30 +5,62 @@ import { cn } from '../../lib/utils';
 import { generatePDFReport, generateExcelReport } from '../../lib/reports';
 
 export function Reports() {
-    const handleExportPDF = () => {
-        generatePDFReport({
-            title: 'Executive Analytics Report',
-            headers: ['Metric', 'Current Value', 'Growth', 'Status'],
-            rows: [
-                ['Total Revenue', 'FCFA 45.2M', '+20.1%', 'Healthy'],
-                ['Active Agents', '124', '+12', 'Increasing'],
-                ['Compliance Rate', '98.2%', '-', 'Verified'],
-            ],
-            filename: 'analytics_report'
-        });
+    const handleExportPDF = async () => {
+        try {
+            const token = localStorage.getItem('procollector_auth_token');
+            const response = await fetch('/api/v1/exports/analytics/pdf', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `analytics_report_${new Date().toISOString().split('T')[0]}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } else {
+                console.error('Export failed');
+                alert('Export failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Export error:', error);
+            alert('Export failed. Please try again.');
+        }
     };
 
-    const handleExportExcel = () => {
-        generateExcelReport({
-            title: 'Detailed KPI Summary',
-            headers: ['Metric', 'Current Value', 'Growth', 'Status'],
-            rows: [
-                ['Total Revenue', 'FCFA 45.2M', '+20.1%', 'Healthy'],
-                ['Active Agents', '124', '+12', 'Increasing'],
-                ['Compliance Rate', '98.2%', '-', 'Verified'],
-            ],
-            filename: 'kpi_summary'
-        });
+    const handleExportExcel = async () => {
+        try {
+            const token = localStorage.getItem('procollector_auth_token');
+            const response = await fetch('/api/v1/exports/analytics/excel', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `analytics_report_${new Date().toISOString().split('T')[0]}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } else {
+                console.error('Export failed');
+                alert('Export failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Export error:', error);
+            alert('Export failed. Please try again.');
+        }
     };
 
     return (

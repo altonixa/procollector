@@ -12,45 +12,100 @@ function parseCSV(text: string) {
 
 export function CSVImport() {
     const [preview, setPreview] = useState<{ headers: string[]; rows: string[][] } | null>(null);
+    const [originalCsvData, setOriginalCsvData] = useState<string>('');
     const [errors, setErrors] = useState<string[]>([]);
     const [message, setMessage] = useState<string | null>(null);
 
-    const handleFile = (file?: File) => {
+    const handleFile = async (file?: File) => {
         setMessage(null);
         setErrors([]);
         setPreview(null);
+        setOriginalCsvData('');
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-            const text = String(reader.result || '');
-            const parsed = parseCSV(text);
-            // Basic validation: detect template type
-            const h = parsed.headers.map(h => h.toLowerCase());
-            const errs: string[] = [];
-            if (h.includes('full_name') && h.includes('phone')) {
-                // clients_import expected headers
-                const required = ['full_name', 'phone', 'balance', 'status'];
-                required.forEach(r => { if (!h.includes(r)) errs.push(`Missing required column: ${r}`); });
-            } else if (h.includes('client_phone') && h.includes('transaction_type')) {
-                const required = ['client_phone', 'transaction_type', 'amount', 'date'];
-                required.forEach(r => { if (!h.includes(r)) errs.push(`Missing required column: ${r}`); });
-            } else {
-                errs.push('Unknown CSV template. Use clients_import.csv or transactions_import.csv');
-            }
 
-            setErrors(errs);
-            setPreview(parsed);
+        const reader = new FileReader();
+        reader.onload = async () => {
+            const text = String(reader.result || '');
+            setOriginalCsvData(text);
+
+            const parsed = parseCSV(text);
+
+            // Validate with backend
+            try {
+                const token = localStorage.getItem('procollector_auth_token');
+                const type = parsed.headers.map(h => h.toLowerCase()).includes('client_phone') ? 'collections' : 'clients';
+
+                const response = await fetch('/api/v1/csv-import/validate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        csvData: text,
+                        type
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    const errs: string[] = [];
+                    if (data.data.headers.missing.length > 0) {
+                        errs.push(`Missing required columns: ${data.data.headers.missing.join(', ')}`);
+                    }
+                    if (data.data.headers.invalid.length > 0) {
+                        errs.push(`Invalid columns: ${data.data.headers.invalid.join(', ')}`);
+                    }
+
+                    setErrors(errs);
+                    setPreview(parsed);
+                } else {
+                    setErrors([data.error || 'Validation failed']);
+                }
+            } catch (error) {
+                console.error('Validation error:', error);
+                setErrors(['Failed to validate CSV. Please try again.']);
+            }
         };
         reader.readAsText(file);
     };
 
-    const handleApply = () => {
+    const handleApply = async () => {
         if (!preview) return;
         if (errors.length) { setMessage('Cannot apply: fix errors first'); return; }
-        // Mock applying migration
-        setMessage('Applying migration (mock) — check console for payload');
-        console.log('MIGRATION PREVIEW', preview);
-        setTimeout(() => setMessage('Migration applied (mock). Records: ' + preview.rows.length), 1000);
+
+        try {
+            setMessage('Applying migration...');
+
+            const token = localStorage.getItem('procollector_auth_token');
+            const endpoint = preview.headers.includes('client_phone') ? '/api/v1/csv-import/collections' : '/api/v1/csv-import/clients';
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    csvData: originalCsvData,
+                    dryRun: false
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setMessage(`Migration applied successfully. Records processed: ${data.data.results.successful}`);
+                setPreview(null);
+                setErrors([]);
+            } else {
+                setMessage(`Migration failed: ${data.error || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error('Migration error:', error);
+            setMessage('Migration failed. Please try again.');
+        }
     };
 
     return (
@@ -119,6 +174,15 @@ export function CSVImport() {
                 </CardContent>
             </Card>
         </div>
+
+        {/* Footer */}
+        <footer className="border-t border-gray-200 bg-gray-50 px-4 py-6 mt-8">
+          <div className="text-center">
+            <p className="text-xs text-gray-500 font-medium">
+              Powered by Altonixa Group Ltd • Data Migration
+            </p>
+          </div>
+        </footer>
     );
 }
 

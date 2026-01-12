@@ -1,36 +1,52 @@
-import { useState } from 'react';
-import { Building2, Users, Eye, Edit, Trash2, Search, Plus } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Building2, Users, Eye, Edit, Trash2, Search, Plus, Loader2 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 
-export default function Organizations() {
-  const [organizations] = useState([
-    {
-      id: 1,
-      name: 'Douala City Council',
-      type: 'COUNCIL',
-      agents: 156,
-      status: 'Active',
-      plan: 'Enterprise'
-    },
-    {
-      id: 2,
-      name: 'National Teachers Union',
-      type: 'UNION',
-      agents: 42,
-      status: 'Active',
-      plan: 'Standard'
-    },
-    {
-      id: 3,
-      name: 'Eco Bank Cameroon',
-      type: 'BANK',
-      agents: 89,
-      status: 'Pending',
-      plan: 'Gold'
-    }
-  ]);
+interface Organization {
+  id: string;
+  name: string;
+  type: string;
+  status: string;
+  plan: string;
+  userCount: number;
+  activeAgents: number;
+  createdAt: string;
+}
 
+export default function Organizations() {
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    fetchOrganizations();
+  }, []);
+
+  const fetchOrganizations = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('procollector_auth_token');
+      const response = await fetch('/api/v1/organizations', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setOrganizations(data.data.organizations);
+      } else {
+        setError(data.error || 'Failed to load organizations');
+      }
+    } catch (err) {
+      console.error('Fetch organizations error:', err);
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredOrgs = organizations.filter(org =>
     org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -107,7 +123,7 @@ export default function Organizations() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center space-x-2">
                     <Users className="w-4 h-4 text-gray-500" />
-                    <span className="text-sm text-gray-900">{org.agents}</span>
+                    <span className="text-sm text-gray-900">{org.activeAgents}</span>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -138,6 +154,15 @@ export default function Organizations() {
           </tbody>
         </table>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-200 bg-gray-50 px-4 py-6 mt-8">
+        <div className="text-center">
+          <p className="text-xs text-gray-500 font-medium">
+            Powered by Altonixa Group Ltd • Multi-tenant Management
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

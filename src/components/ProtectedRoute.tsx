@@ -27,15 +27,14 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
 
   // Role-based access control for production routes
   if (requiredRole && user) {
-    // Allow managers and supervisors to access organization routes
-    const allowedRoles = requiredRole === 'organization' ? ['organization', 'manager', 'supervisor'] : [requiredRole];
+    // Allow managers to access organization routes
+    const allowedRoles = requiredRole === 'organization' ? ['organization', 'manager'] : [requiredRole];
     if (!allowedRoles.includes(user.role)) {
       // Redirect to their appropriate dashboard
       const roleRoutes: { [key: string]: string } = {
         'admin': '/admin',
         'organization': '/organization',
         'manager': '/manager',
-        'supervisor': '/supervisor',
         'collector': '/collector',
         'client': '/client',
         'auditor': '/auditor'

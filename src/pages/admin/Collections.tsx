@@ -13,22 +13,67 @@ const mockCollections = [
 ];
 
 export function Collections() {
-    const handleExportPDF = () => {
-        generatePDFReport({
-            title: 'Audit Trail - Collections',
-            headers: ['ID', 'Agent', 'Client/Type', 'Amount', 'Status', 'Timestamp'],
-            rows: mockCollections.map(c => [c.id, c.agent, c.taxType, c.amount, c.status, c.date]),
-            filename: 'collections_report'
-        });
+    const handleExportPDF = async () => {
+        try {
+            const token = localStorage.getItem('procollector_auth_token');
+            const response = await fetch('/api/v1/exports/collections/pdf', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `collections_report_${new Date().toISOString().split('T')[0]}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } else {
+                console.error('Export failed');
+                alert('Export failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Export error:', error);
+            alert('Export failed. Please try again.');
+        }
     };
 
-    const handleExportExcel = () => {
-        generateExcelReport({
-            title: 'Full Transaction Audit',
-            headers: ['ID', 'Agent', 'Client/Type', 'Amount', 'Status', 'Timestamp'],
-            rows: mockCollections.map(c => [c.id, c.agent, c.taxType, c.amount, c.status, c.date]),
-            filename: 'collections_audit'
-        });
+    const handleExportExcel = async () => {
+        try {
+            const token = localStorage.getItem('procollector_auth_token');
+            const response = await fetch('/api/v1/exports/collections/excel', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.download = `collections_report_${new Date().toISOString().split('T')[0]}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                a.href = url;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            } else {
+                console.error('Export failed');
+                alert('Export failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Export error:', error);
+            alert('Export failed. Please try again.');
+        }
     };
 
     return (
@@ -103,5 +148,14 @@ export function Collections() {
                 </div>
             </Card>
         </div>
+
+        {/* Footer */}
+        <footer className="border-t border-gray-200 bg-gray-50 px-4 py-6 mt-8">
+          <div className="text-center">
+            <p className="text-xs text-gray-500 font-medium">
+              Powered by Altonixa Group Ltd • System Audit
+            </p>
+          </div>
+        </footer>
     );
 }

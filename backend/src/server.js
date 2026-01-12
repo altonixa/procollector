@@ -15,6 +15,12 @@ import inventoryRoutes from './routes/inventory.js';
 import usersRoutes from './routes/users.js';
 import clientsRoutes from './routes/clients.js';
 import dashboardRoutes from './routes/dashboard.js';
+import exportsRoutes from './routes/exports.js';
+import organizationsRoutes from './routes/organizations.js';
+import csvImportRoutes from './routes/csv-import.js';
+import clientDashboardRoutes from './routes/client-dashboard.js';
+import collectorDashboardRoutes from './routes/collector-dashboard.js';
+import filesRoutes from './routes/files.js';
 
 // Import middleware
 import { apiLimiter } from './middleware/rateLimiter.js';
@@ -65,6 +71,12 @@ app.use('/api/v1/inventory', inventoryRoutes);
 app.use('/api/v1/users', usersRoutes);
 app.use('/api/v1/clients', clientsRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
+app.use('/api/v1/exports', exportsRoutes);
+app.use('/api/v1/organizations', organizationsRoutes);
+app.use('/api/v1/csv-import', csvImportRoutes);
+app.use('/api/v1/client', clientDashboardRoutes);
+app.use('/api/v1/collector', collectorDashboardRoutes);
+app.use('/api/v1/files', filesRoutes);
 
 // 404 handler
 app.use((req, res) => {

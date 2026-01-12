@@ -17,10 +17,8 @@ export function Login() {
         const productionRoutes: { [key: string]: string } = {
             'organization': '/organization',
             'manager': '/manager',
-            'supervisor': '/supervisor',
             'collector': '/collector',
-            'client': '/client',
-            'auditor': '/auditor'
+            'client': '/client'
         };
         return productionRoutes[role] || '/dashboard';
     };
@@ -29,10 +27,8 @@ export function Login() {
     const demoCredentials: { [key: string]: { email: string; password: string } } = {
         'organization': { email: 'organization@demo.com', password: 'demodemo' },
         'manager': { email: 'manager@demo.com', password: 'demodemo' },
-        'supervisor': { email: 'supervisor@demo.com', password: 'demodemo' },
         'collector': { email: 'collector@demo.com', password: 'demodemo' },
-        'client': { email: 'client@demo.com', password: 'demodemo' },
-        'auditor': { email: 'auditor@demo.com', password: 'demodemo' }
+        'client': { email: 'client@demo.com', password: 'demodemo' }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -113,16 +109,6 @@ export function Login() {
                                 <div className="text-xs text-brand-dark/60">Field Monitoring</div>
                             </button>
 
-                            <button
-                                onClick={() => setSelectedPortal('supervisor')}
-                                className="p-4 border border-brand-green/30 rounded-lg hover:bg-brand-green/5 transition-colors text-left"
-                            >
-                                <div className="flex items-center gap-2 mb-2">
-                                    <Eye className="h-4 w-4 text-brand-green" />
-                                    <span className="text-xs font-bold">Supervisor</span>
-                                </div>
-                                <div className="text-xs text-brand-dark/60">Field Supervision</div>
-                            </button>
 
                             <button
                                 onClick={() => setSelectedPortal('collector')}
@@ -148,6 +134,36 @@ export function Login() {
                         </div>
                     </div>
                 )}
+
+                <div className="border-t border-brand-slate-50 pt-8">
+                    <h4 className="text-sm font-bold text-brand-dark/60 uppercase tracking-widest mb-4">Demo Credentials</h4>
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <p className="text-sm font-medium text-blue-800 mb-3">Try any of these demo accounts:</p>
+                        <div className="space-y-3">
+                            {Object.entries(demoCredentials).map(([portal, creds]) => (
+                                <div key={portal} className="bg-white/50 rounded p-3 border">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <span className="text-sm font-semibold text-blue-900 capitalize">{portal}</span>
+                                        {selectedPortal === portal && (
+                                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Selected</span>
+                                        )}
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-xs text-blue-700">
+                                            <strong>Email:</strong> {creds.email}
+                                        </p>
+                                        <p className="text-xs text-blue-700">
+                                            <strong>Password:</strong> {creds.password}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <p className="text-xs text-blue-600 mt-3 italic">
+                            All demo accounts use the same password: demodemo
+                        </p>
+                    </div>
+                </div>
 
                 {selectedPortal && (
                     <form className="space-y-8" onSubmit={handleSubmit}>

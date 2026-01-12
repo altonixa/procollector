@@ -43,9 +43,7 @@ export function DemoTest() {
                         <Link to="/demo-landing">
                             <Button variant="outline">← Back to Demo</Button>
                         </Link>
-                        <Link to="/signup">
-                            <Button variant="outline">Try Demo</Button>
-                        </Link>
+                        
                     </div>
                 </div>
 

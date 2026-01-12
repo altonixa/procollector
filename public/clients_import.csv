@@ -1,3 +1,0 @@
-client_id,full_name,phone,email,account_number,balance,last_transaction_date,assigned_collector,branch,status
-12345,Jean Dupont,+237600000000,jean@example.com,ACCT-001,15000,2025-12-19,collector_01,Douala,active
-23456,Marie Kline,+237600000001,marie@example.com,ACCT-002,7500,2025-12-18,collector_02,Yaounde,active

@@ -78,18 +78,6 @@ const navItemsMap = {
     auditor: [
         { icon: FileText, label: 'Auditor Portal', to: '/auditor' },
     ],
-    supervisor: [
-        { icon: Eye, label: 'Supervisor', to: '/supervisor' },
-        { icon: LayoutDashboard, label: 'Organization', to: '/organization' },
-        { icon: Users, label: 'Collectors', to: '/supervisor/collectors' },
-        { icon: Users, label: 'Agents', to: '/supervisor/agents' },
-        { icon: Activity, label: 'Monitor', to: '/supervisor/monitoring' },
-        { icon: Bus, label: 'Transport', to: '/organization/transport' },
-        { icon: Home, label: 'Hostel', to: '/organization/hostel' },
-        { icon: Package, label: 'Inventory', to: '/organization/inventory' },
-        { icon: FileText, label: 'Reports', to: '/organization/reports' },
-        { icon: Settings, label: 'Settings', to: '/dashboard/settings' },
-    ],
 };
 
 

@@ -48,15 +48,7 @@ export function PublicLayout() {
 
                         {/* CTA Buttons */}
                         <div className="hidden md:flex items-center gap-4">
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setShowDemoModal(true)}
-                                className="text-white hover:bg-white/10 text-xs font-bold uppercase tracking-widest"
-                            >
-                                <Play className="h-3 w-3 mr-2" />
-                                Try Demo
-                            </Button>
+                            
                             <Link to="/login">
                                 <Button variant="ghost" className="font-black text-white hover:bg-white/10">Log in</Button>
                             </Link>

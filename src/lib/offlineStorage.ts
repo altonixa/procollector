@@ -16,6 +16,8 @@ export interface PendingCollection {
     longitude?: number;
     collectedAt: string;
     status: 'pending_sync';
+    proofFile?: File;
+    proofFileName?: string;
 }
 
 class OfflineStorage {

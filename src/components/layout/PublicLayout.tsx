@@ -1,186 +1,166 @@
 import { Button } from "../ui/Button";
 import { Link, Outlet, NavLink } from "react-router-dom";
-import { Menu, X, Shield, Play } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "../../lib/utils";
 import { DemoAccessModal } from "./DemoAccessModal";
 import { useNavigate } from "react-router-dom";
 
+const NAV = [
+    { label: "Product", to: "/features" },
+    { label: "Pricing", to: "/pricing" },
+    { label: "Company", to: "/about" },
+    { label: "Contact", to: "/contact" },
+];
+
+function Logo({ light = false }: { light?: boolean }) {
+    return (
+        <Link to="/" className="flex items-center gap-2 group">
+            <span className={cn(
+                "h-7 w-7 rounded-md grid place-items-center text-[13px] font-semibold",
+                light ? "bg-white text-brand" : "bg-brand text-white"
+            )}>
+                P
+            </span>
+            <span className={cn("text-[15px] font-semibold tracking-tight", light ? "text-white" : "text-ink")}>
+                ProCollector
+            </span>
+        </Link>
+    );
+}
+
 export function PublicLayout() {
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [showDemoModal, setShowDemoModal] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [showDemo, setShowDemo] = useState(false);
     const navigate = useNavigate();
 
     const handleDemoSubmit = (orgName: string) => {
-        setIsMobileMenuOpen(false);
+        setOpen(false);
         navigate(`/demo-portals?org=${encodeURIComponent(orgName)}`);
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-brand-dustGold font-sans text-brand-dark overflow-x-hidden">
-            {/* Navbar */}
-            <nav className="sticky top-0 z-50 w-full border-b border-brand-dark/10 bg-brand-green shadow-md">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-20 items-center justify-between">
-                        <Link to="/" className="hover:opacity-80 transition-opacity">
-                            <img
-                                src="/favicon.jpg"
-                                alt="Logo"
-                                className="h-12 w-12 rounded-2xl shadow-xl shadow-black/10 border-2 border-white/20"
-                            />
-                        </Link>
+        <div className="min-h-screen flex flex-col bg-white text-ink">
+            {/* Nav */}
+            <header className="sticky top-0 z-40 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-line">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="h-14 flex items-center justify-between">
+                        <Logo />
 
-                        {/* Desktop Nav */}
-                        <div className="hidden md:flex items-center gap-10">
-                            {['Home', 'Features', 'Pricing', 'About', 'Contact'].map((item) => (
+                        <nav className="hidden md:flex items-center gap-1">
+                            {NAV.map((item) => (
                                 <NavLink
-                                    key={item}
-                                    to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
+                                    key={item.to}
+                                    to={item.to}
                                     className={({ isActive }) => cn(
-                                        "text-sm font-black uppercase tracking-widest transition-colors hover:text-white/70",
-                                        isActive ? "text-white border-b-2 border-white" : "text-white/80"
+                                        "px-3 py-1.5 rounded-md text-[13.5px] font-medium transition-colors",
+                                        isActive ? "text-ink bg-bg-subtle" : "text-ink-muted hover:text-ink"
                                     )}
                                 >
-                                    {item}
+                                    {item.label}
                                 </NavLink>
                             ))}
-                        </div>
+                        </nav>
 
-                        {/* CTA Buttons */}
-                        <div className="hidden md:flex items-center gap-4">
-                            
+                        <div className="hidden md:flex items-center gap-2">
                             <Link to="/login">
-                                <Button variant="ghost" className="font-black text-white hover:bg-white/10">Log in</Button>
+                                <Button variant="ghost" size="sm">Sign in</Button>
                             </Link>
-                            <Link to="/login">
-                                <Button variant="secondary" className="shadow-lg shadow-black/20 font-black bg-brand-dustGold text-brand-dark hover:bg-brand-dustGold/90">Get Started</Button>
+                            <Link to="/signup">
+                                <Button size="sm">Request demo</Button>
                             </Link>
                         </div>
 
-                        {/* Mobile Menu Toggle */}
                         <button
-                            className="md:hidden p-2 text-white"
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="md:hidden p-2 -mr-2 text-ink"
+                            onClick={() => setOpen(!open)}
+                            aria-label="Toggle menu"
                         >
-                            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                         </button>
                     </div>
                 </div>
 
-                {/* Mobile Menu */}
-                {isMobileMenuOpen && (
-                    <div className="md:hidden border-t border-brand-dark/10 bg-brand-green p-6 space-y-6 animate-in slide-in-from-top duration-300 shadow-xl">
-                        <div className="flex flex-col gap-4">
-                            {['Home', 'Features', 'Pricing', 'About', 'Contact'].map((item) => (
+                {open && (
+                    <div className="md:hidden border-t border-line bg-white">
+                        <div className="px-4 py-4 space-y-1">
+                            {NAV.map((item) => (
                                 <Link
-                                    key={item}
-                                    to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="text-lg font-black uppercase text-white hover:text-brand-dustGold transition-colors"
+                                    key={item.to}
+                                    to={item.to}
+                                    onClick={() => setOpen(false)}
+                                    className="block px-3 py-2 rounded-md text-sm font-medium text-ink-muted hover:bg-bg-subtle hover:text-ink"
                                 >
-                                    {item}
+                                    {item.label}
                                 </Link>
                             ))}
-                            <button
-                                onClick={() => {
-                                    setShowDemoModal(true);
-                                    setIsMobileMenuOpen(false);
-                                }}
-                                className="text-lg font-black uppercase text-brand-dustGold hover:text-brand-dustGold/80 transition-colors flex items-center gap-2"
-                            >
-                                <Play className="h-5 w-5" />
-                                Try Demo
-                            </button>
-                        </div>
-                        <div className="pt-6 flex flex-col gap-3 border-t border-white/10">
-                            <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                                <Button variant="outline" className="w-full h-12 border-white text-white hover:bg-white/10 font-black">Log in</Button>
-                            </Link>
-                            <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                                <Button variant="secondary" className="w-full h-12 font-black bg-brand-dustGold text-brand-dark hover:bg-brand-dustGold/90">Get Started</Button>
-                            </Link>
+                            <div className="pt-2 mt-2 border-t border-line flex flex-col gap-2">
+                                <Link to="/login" onClick={() => setOpen(false)}>
+                                    <Button variant="outline" className="w-full">Sign in</Button>
+                                </Link>
+                                <Link to="/signup" onClick={() => setOpen(false)}>
+                                    <Button className="w-full">Request demo</Button>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 )}
-            </nav>
+            </header>
 
-            {/* Main Content */}
-            <main className="flex-1 bg-brand-dustGold">
+            {/* Main */}
+            <main className="flex-1">
                 <Outlet />
             </main>
 
             {/* Footer */}
-            <footer className="bg-brand-green text-brand-dark pt-24 pb-12 shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)]">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-24">
-                        <div className="space-y-6">
-                            <div className="flex items-center gap-3">
-                                <img
-                                    src="/favicon.jpg"
-                                    alt="Logo"
-                                    className="h-14 w-14 rounded-2xl shadow-lg border border-white/20"
-                                />
-                            </div>
-                            <p className="text-white/70 leading-relaxed font-bold">
-                                Building the digital infrastructure for a more transparent and accountable Africa.
+            <footer className="border-t border-line bg-white">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+                        <div className="col-span-2 space-y-3">
+                            <Logo />
+                            <p className="text-sm text-ink-muted max-w-xs leading-relaxed">
+                                Digital revenue collection infrastructure for governments, councils, banks and unions.
                             </p>
-                            <div className="flex items-center gap-4 opacity-70">
-                                <Shield className="h-5 w-5 text-white" />
-                                <span className="text-[10px] font-black tracking-widest uppercase text-white">Certified Security</span>
-                            </div>
                         </div>
 
                         <div>
-                            <h3 className="font-black text-sm uppercase tracking-widest mb-6 text-white italic">Platform</h3>
-                            <ul className="space-y-4 text-white/70 font-bold">
-                                <li><Link to="/features" className="hover:text-white transition-colors">Features</Link></li>
-                                <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+                            <h4 className="text-xs font-semibold text-ink mb-3">Product</h4>
+                            <ul className="space-y-2 text-sm text-ink-muted">
+                                <li><Link to="/features" className="hover:text-ink">Features</Link></li>
+                                <li><Link to="/pricing" className="hover:text-ink">Pricing</Link></li>
+                                <li><Link to="/login" className="hover:text-ink">Sign in</Link></li>
                             </ul>
                         </div>
 
                         <div>
-                            <h3 className="font-black text-sm uppercase tracking-widest mb-6 text-white italic">Company</h3>
-                            <ul className="space-y-4 text-white/70 font-bold">
-                                <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
-                                <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                                <li><Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                            <h4 className="text-xs font-semibold text-ink mb-3">Company</h4>
+                            <ul className="space-y-2 text-sm text-ink-muted">
+                                <li><Link to="/about" className="hover:text-ink">About</Link></li>
+                                <li><Link to="/contact" className="hover:text-ink">Contact</Link></li>
                             </ul>
                         </div>
 
-                        <div className="space-y-6">
-                            <h3 className="font-black text-sm uppercase tracking-widest mb-6 text-white italic">Newsletter</h3>
-                            <p className="text-xs text-white/60 font-bold leading-relaxed">
-                                Get updates on revenue collection best practices and platform news.
-                            </p>
-                            <div className="flex gap-2">
-                                <input type="email" placeholder="Email" className="bg-white/5 border-white/10 rounded-lg px-4 py-2 text-sm w-full focus:ring-2 focus:ring-white/20 text-white placeholder:text-white/30" />
-                                <Button size="sm" variant="secondary" className="px-3 border-none shadow-md bg-brand-dustGold text-brand-dark">Join</Button>
-                            </div>
+                        <div>
+                            <h4 className="text-xs font-semibold text-ink mb-3">Legal</h4>
+                            <ul className="space-y-2 text-sm text-ink-muted">
+                                <li><Link to="/privacy" className="hover:text-ink">Privacy</Link></li>
+                                <li><Link to="/terms" className="hover:text-ink">Terms</Link></li>
+                            </ul>
                         </div>
                     </div>
 
-                    <div className="mt-24 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div className="flex flex-col items-center md:items-start gap-1">
-                            <p className="text-sm text-white/60 font-bold tracking-tight">
-                                © {new Date().getFullYear()} ProCollector. All rights reserved.
-                            </p>
-                            <p className="text-[10px] text-white/40 font-black uppercase tracking-widest">
-                                Powered by Altonixa Group Ltd.
-                            </p>
-                        </div>
-                        <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-white/60">
-                            <a href="#" className="hover:text-white">Status</a>
-                            <Link to="/terms" className="hover:text-white">Terms</Link>
-                            <Link to="/privacy" className="hover:text-white">Privacy</Link>
-                            <a href="#" className="hover:text-white">Legal</a>
-                        </div>
+                    <div className="mt-10 pt-6 border-t border-line flex flex-col sm:flex-row justify-between items-center gap-3">
+                        <p className="text-xs text-ink-faint">
+                            © {new Date().getFullYear()} ProCollector. Powered by Altonixa Group Ltd.
+                        </p>
+                        <p className="text-xs text-ink-faint">All systems operational</p>
                     </div>
                 </div>
             </footer>
 
             <DemoAccessModal
-                isOpen={showDemoModal}
-                onClose={() => setShowDemoModal(false)}
+                isOpen={showDemo}
+                onClose={() => setShowDemo(false)}
                 onSubmit={handleDemoSubmit}
             />
         </div>

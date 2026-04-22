@@ -1,52 +1,56 @@
-import { ShieldCheck, Eye, Database } from 'lucide-react';
+import { ShieldCheck, Eye, Database, Lock } from "lucide-react";
+
+const sections = [
+    {
+        icon: Database,
+        title: "Data we collect",
+        body: "We collect organisational identifiers, user account data (name, work email, role), transaction records you generate inside the platform, GPS locations of recorded collections, and standard device/log data needed to operate the service.",
+    },
+    {
+        icon: Eye,
+        title: "How we use it",
+        body: "Your data is used to deliver the platform — recording transactions, reconciling deposits, monitoring agents, and generating reports. We do not sell or rent your data, and we don't use it to train models.",
+    },
+    {
+        icon: Lock,
+        title: "How we protect it",
+        body: "Data is encrypted in transit and at rest. Tenant data is isolated per organisation. Access is gated by role-based permissions and audited. We follow industry best practices for backups and disaster recovery.",
+    },
+    {
+        icon: ShieldCheck,
+        title: "Your rights",
+        body: "You can request export or deletion of personal data at any time. Organisation administrators control retention policies for their own tenant. Contact privacy@procollector.com for any request.",
+    },
+];
 
 export function Privacy() {
     return (
-        <div className="bg-brand-dustGold min-h-screen py-24 px-4 font-sans text-brand-dark">
-            <div className="max-w-4xl mx-auto space-y-12">
-                <div className="text-center space-y-4">
-                    <h1 className="text-5xl font-black uppercase tracking-tighter">Privacy <span className="text-brand-green">Policy</span></h1>
-                    <p className="text-brand-dark/50 font-bold uppercase tracking-widest text-sm">Effective Date: December 20, 2025</p>
+        <div>
+            <section className="border-b border-line">
+                <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                    <p className="text-xs font-medium text-brand mb-3">Legal</p>
+                    <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight">Privacy policy</h1>
+                    <p className="mt-3 text-sm text-ink-faint">Effective December 20, 2025</p>
+                    <p className="mt-6 text-ink-muted leading-relaxed">
+                        This policy explains what data ProCollector collects, how we use it, and the rights you have over it.
+                    </p>
                 </div>
-
-                <div className="grid gap-8">
-                    <section className="bg-white p-10 rounded-3xl border border-brand-dark/5 shadow-premium space-y-6">
-                        <div className="flex items-center gap-4">
-                            <div className="p-3 bg-brand-green/20 rounded-2xl text-brand-dark">
-                                <Database className="h-6 w-6" />
+            </section>
+            <section>
+                <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-10">
+                    {sections.map((s) => (
+                        <div key={s.title}>
+                            <div className="flex items-center gap-2.5 mb-2">
+                                <span className="h-7 w-7 rounded-md bg-brand-soft grid place-items-center">
+                                    <s.icon className="h-3.5 w-3.5 text-brand" />
+                                </span>
+                                <h2 className="text-lg font-semibold">{s.title}</h2>
                             </div>
-                            <h2 className="text-2xl font-black uppercase tracking-tight">Data Collection</h2>
+                            <p className="text-ink-muted leading-relaxed">{s.body}</p>
                         </div>
-                        <p className="font-bold leading-relaxed text-brand-dark/70">
-                            We collect transaction data specifically for the purpose of revenue audit and reconciliation. This includes agent identification, client details, transaction amounts in FCFA, and mandatory real-time geolocation coordinates.
-                        </p>
-                    </section>
-
-                    <section className="bg-white p-10 rounded-3xl border border-brand-dark/5 shadow-premium space-y-6">
-                        <div className="flex items-center gap-4">
-                            <div className="p-3 bg-brand-green/20 rounded-2xl text-brand-dark">
-                                <Eye className="h-6 w-6" />
-                            </div>
-                            <h2 className="text-2xl font-black uppercase tracking-tight">Third-Party Usage</h2>
-                        </div>
-                        <p className="font-bold leading-relaxed text-brand-dark/70">
-                            Altonixa Group Ltd does not sell your organization's data to third parties. Data is only accessible to authorized personnel within your organization and our system administrators for maintenance and support purposes.
-                        </p>
-                    </section>
-
-                    <section className="bg-white p-10 rounded-3xl border border-brand-dark/5 shadow-premium space-y-6">
-                        <div className="flex items-center gap-4">
-                            <div className="p-3 bg-brand-green/20 rounded-2xl text-brand-dark">
-                                <ShieldCheck className="h-6 w-6" />
-                            </div>
-                            <h2 className="text-2xl font-black uppercase tracking-tight">Security Standards</h2>
-                        </div>
-                        <p className="font-bold leading-relaxed text-brand-dark/70">
-                            Your data is stored in encrypted cloud environments with strict access controls. We adhere to regional data protection regulations in Central Africa to ensure the highest standards of financial data privacy.
-                        </p>
-                    </section>
+                    ))}
                 </div>
-            </div>
+            </section>
         </div>
     );
 }

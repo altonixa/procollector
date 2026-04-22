@@ -1,193 +1,135 @@
 import { Button } from "../../components/ui/Button";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, ShieldCheck, BarChart3, Globe2, Users, Wallet, Building2, Smartphone, ScrollText } from "lucide-react";
+import { ArrowRight, Check, ShieldCheck, BarChart3, MapPin, Banknote, Building2, Users, Smartphone, FileCheck2 } from "lucide-react";
 
 export function Home() {
     return (
-        <div className="flex flex-col">
-            {/* Hero Section */}
-            <section className="relative overflow-hidden bg-brand-light pt-16 pb-24 lg:pt-32 lg:pb-40">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-                    <div className="inline-flex items-center rounded-full border border-brand-green/20 bg-brand-green/10 px-3 py-1 text-sm font-medium text-brand-green mb-8">
-                        <span className="flex h-2 w-2 rounded-full bg-brand-green mr-2 animate-pulse"></span>
-                        Now Live across Africa
+        <div>
+            {/* Hero */}
+            <section className="border-b border-line">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 lg:pt-28 lg:pb-32">
+                    <div className="max-w-3xl">
+                        <span className="inline-flex items-center gap-2 text-xs font-medium text-ink-muted bg-bg-subtle border border-line rounded-full px-2.5 py-1 mb-6">
+                            <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+                            Live across Africa
+                        </span>
+                        <h1 className="text-[40px] sm:text-5xl lg:text-6xl font-semibold tracking-tight text-ink leading-[1.05]">
+                            Revenue collection,<br />
+                            <span className="text-ink-muted">accounted for to the last coin.</span>
+                        </h1>
+                        <p className="mt-6 text-lg text-ink-muted max-w-2xl leading-relaxed">
+                            ProCollector is a multi-tenant collection platform for governments, councils, banks and unions. Track every transaction from the field to the bank in real time.
+                        </p>
+                        <div className="mt-8 flex flex-wrap items-center gap-3">
+                            <Link to="/signup">
+                                <Button size="lg" className="group">
+                                    Request a demo
+                                    <ArrowRight className="ml-1.5 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                                </Button>
+                            </Link>
+                            <Link to="/contact">
+                                <Button size="lg" variant="outline">Talk to sales</Button>
+                            </Link>
+                        </div>
+                        <p className="mt-6 text-xs text-ink-faint">No credit card required · Setup in under a week</p>
                     </div>
-                    <h1 className="mx-auto max-w-4xl text-5xl font-black tracking-tight text-brand-dark sm:text-6xl mb-6 uppercase">
-                        Eliminate Revenue Leakages with <span className="text-brand-green">Digital Confidence</span>
-                    </h1>
-                    <p className="mx-auto max-w-2xl text-lg text-brand-dark/70 mb-10 font-medium">
-                        A centralized, multi-tenant digital collection platform for Governments, Councils, Banks, and Unions. Track every coin from the field to the bank in real-time.
-                    </p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Link to="/login">
-                            <Button size="lg" className="h-14 px-10 text-base font-black uppercase tracking-widest shadow-2xl shadow-brand-green/20 group">
-                                Start with Confidence
-                                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                            </Button>
-                        </Link>
-                    </div>
-                </div>
-
-                {/* Abstract Background Elements */}
-                <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 opacity-30">
-                    <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] rounded-full bg-brand-green/20 blur-[100px]"></div>
-                    <div className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-brand-teal/20 blur-[120px]"></div>
                 </div>
             </section>
 
-            {/* Problem / Solution Grid */}
-            <section className="py-24 bg-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold tracking-tight text-brand-dark sm:text-4xl mb-4">Why ProCollector?</h2>
-                        <p className="text-lg text-brand-dark/60 max-w-2xl mx-auto font-medium">
-                            Traditional collection methods are full of leaks, fraud, and manual errors. We solve this with technology built for the field.
-                        </p>
+            {/* Logo strip */}
+            <section className="border-b border-line bg-bg-subtle">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                    <p className="text-[11px] font-medium text-ink-faint mb-5">Trusted by institutions across the region</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                        {["City Council", "National Bank", "Market Union", "Transport Co."].map((n) => (
+                            <div key={n} className="text-sm font-medium text-ink-muted">{n}</div>
+                        ))}
                     </div>
+                </div>
+            </section>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {features.map((feature, index) => (
-                            <div key={index} className="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-lg transition-shadow group">
-                                <div className="h-12 w-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center mb-6 group-hover:border-brand-green/50 group-hover:bg-brand-green/5 transition-colors">
-                                    <feature.icon className="h-6 w-6 text-brand-green" />
-                                </div>
-                                <h3 className="text-xl font-bold text-brand-dark mb-3">{feature.title}</h3>
-                                <p className="text-brand-dark/70 leading-relaxed font-medium">
-                                    {feature.description}
-                                </p>
+            {/* Feature trio */}
+            <section className="border-b border-line">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                    <div className="max-w-2xl mb-12">
+                        <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">Why teams switch to ProCollector</h2>
+                        <p className="mt-3 text-ink-muted">Paper receipts and spreadsheets leak revenue. We close the gap with software designed for the field.</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-line border border-line rounded-xl overflow-hidden">
+                        {features.map((f) => (
+                            <div key={f.title} className="bg-white p-6">
+                                <f.icon className="h-5 w-5 text-brand" />
+                                <h3 className="mt-4 text-base font-semibold">{f.title}</h3>
+                                <p className="mt-1.5 text-sm text-ink-muted leading-relaxed">{f.description}</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Social Proof / Trust */}
-            <section className="py-20 bg-brand-dark text-white overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-2xl font-semibold mb-12 opacity-80">Trusted by modern institutions</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 opacity-50 grayscale hover:grayscale-0 transition-all">
-                        {/* Placeholders for logos */}
-                        <div className="h-12 flex items-center justify-center border border-white/20 rounded">City Council</div>
-                        <div className="h-12 flex items-center justify-center border border-white/20 rounded">National Bank</div>
-                        <div className="h-12 flex items-center justify-center border border-white/20 rounded">Market Union</div>
-                        <div className="h-12 flex items-center justify-center border border-white/20 rounded">Transport Co.</div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Value Props Details */}
-            <section className="py-24 bg-slate-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-col lg:flex-row items-center gap-16">
-                        <div className="flex-1 space-y-8">
-                            <h2 className="text-3xl font-bold text-brand-dark">Complete Visibility, Finally.</h2>
-                            <p className="text-lg text-slate-600">
-                                ProCollector gives you a "God-mode" view of your operations. See every transaction as it happens, know where your collectors are, and reconcile cash instantly.
+            {/* Split: visibility */}
+            <section className="border-b border-line">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                        <div>
+                            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">A single view of every transaction.</h2>
+                            <p className="mt-4 text-ink-muted leading-relaxed">
+                                Watch collections as they happen. Know where every collector is, what they collected, and how it reconciles against bank deposits — without chasing reports.
                             </p>
-
-                            <ul className="space-y-4">
-                                {[
-                                    "Real-time Dashboard & Analytics",
-                                    "GPS-tracked Field Collections",
-                                    "Fraud-proof Digital Receipts",
-                                    "Automated Daily Reconciliation"
-                                ].map((item, i) => (
-                                    <li key={i} className="flex items-center gap-3">
-                                        <CheckCircle2 className="h-5 w-5 text-brand-green flex-shrink-0" />
-                                        <span className="text-brand-dark font-bold">{item}</span>
+                            <ul className="mt-6 space-y-3">
+                                {["Real-time dashboard", "GPS-tracked field collections", "Tamper-proof digital receipts", "Automated daily reconciliation"].map((item) => (
+                                    <li key={item} className="flex items-center gap-3 text-[15px] text-ink">
+                                        <Check className="h-4 w-4 text-brand flex-shrink-0" />
+                                        {item}
                                     </li>
                                 ))}
                             </ul>
-
-                            <Button variant="outline" className="mt-4">Learn about Features</Button>
+                            <Link to="/features" className="mt-7 inline-flex items-center text-sm font-medium text-brand hover:text-brand-hover">
+                                See all features <ArrowRight className="ml-1 h-4 w-4" />
+                            </Link>
                         </div>
-                        <div className="flex-1">
-                            {/* Abstract UI representation */}
-                            <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-200 bg-white">
-                                <div className="absolute top-0 w-full h-8 bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-2">
-                                    <div className="h-3 w-3 rounded-full bg-red-400"></div>
-                                    <div className="h-3 w-3 rounded-full bg-yellow-400"></div>
-                                    <div className="h-3 w-3 rounded-full bg-green-400"></div>
-                                </div>
-                                <div className="pt-8 p-6 space-y-4 bg-slate-50/50">
-                                    <div className="flex gap-4">
-                                        <div className="w-1/3 h-24 bg-white rounded-lg shadow-sm border border-slate-100 p-4">
-                                            <div className="h-2 w-12 bg-slate-200 rounded mb-2"></div>
-                                            <div className="h-6 w-20 bg-brand-green/20 rounded"></div>
-                                        </div>
-                                        <div className="w-1/3 h-24 bg-white rounded-lg shadow-sm border border-slate-100 p-4">
-                                            <div className="h-2 w-12 bg-slate-200 rounded mb-2"></div>
-                                            <div className="h-6 w-20 bg-brand-teal/20 rounded"></div>
-                                        </div>
-                                        <div className="w-1/3 h-24 bg-white rounded-lg shadow-sm border border-slate-100 p-4">
-                                            <div className="h-2 w-12 bg-slate-200 rounded mb-2"></div>
-                                            <div className="h-6 w-20 bg-brand-dark/20 rounded"></div>
-                                        </div>
-                                    </div>
-                                    <div className="h-40 bg-white rounded-lg shadow-sm border border-slate-100 w-full p-4 flex items-end gap-2">
-                                        <div className="w-full bg-brand-green/10 h-[40%] rounded-t"></div>
-                                        <div className="w-full bg-brand-green/20 h-[60%] rounded-t"></div>
-                                        <div className="w-full bg-brand-green/40 h-[30%] rounded-t"></div>
-                                        <div className="w-full bg-brand-green h-[80%] rounded-t"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <DashboardMock />
                     </div>
                 </div>
             </section>
-            {/* How it Works */}
-            <section className="py-24 bg-white relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-brand-green/10" />
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="text-center mb-20">
-                        <h2 className="text-4xl font-black tracking-tighter text-brand-dark uppercase mb-4">How it <span className="text-brand-green">Works</span></h2>
-                        <p className="text-brand-dark/50 font-bold uppercase tracking-widest text-sm italic">Enterprise Revenue Lifecycle in 4 Steps</p>
+
+            {/* How it works */}
+            <section className="border-b border-line bg-bg-subtle">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                    <div className="max-w-2xl mb-12">
+                        <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">From sign-up to first reconciliation</h2>
+                        <p className="mt-3 text-ink-muted">A four-step rollout that fits the workflow your team already runs.</p>
                     </div>
-
-                    <div className="grid md:grid-cols-4 gap-8 relative">
-                        {/* Connecting Line */}
-                        <div className="hidden md:block absolute top-[60px] left-[10%] right-[10%] h-[2px] bg-brand-green/10 -z-0" />
-
+                    <ol className="grid md:grid-cols-4 gap-px bg-line border border-line rounded-xl overflow-hidden">
                         {[
-                            { step: '01', title: 'Register Org', desc: 'Create your secure portal, invite Managers, and define your zones.', icon: Building2 },
-                            { step: '02', title: 'Deploy Agents', desc: 'Onboard collectors and assign them to territories or client routes.', icon: Users },
-                            { step: '03', title: 'Field Collection', desc: 'Agents record collections with mandatory GPS & digital receipts.', icon: Smartphone },
-                            { step: '04', title: 'Reconcile', desc: 'Compare collected funds against bank deposits in real-time.', icon: ScrollText },
-                        ].map((item, i) => (
-                            <div key={i} className="relative z-10 text-center space-y-6 group">
-                                <div className="h-28 w-28 bg-brand-dustGold rounded-[2rem] mx-auto flex items-center justify-center border-2 border-brand-dark/5 shadow-premium group-hover:scale-110 group-hover:bg-brand-green transition-all duration-500">
-                                    <item.icon className="h-10 w-10 text-brand-dark" />
+                            { n: "01", t: "Register your org", d: "Create a portal, invite managers, define zones.", icon: Building2 },
+                            { n: "02", t: "Onboard collectors", d: "Assign agents to territories or client routes.", icon: Users },
+                            { n: "03", t: "Collect in the field", d: "Every receipt is geo-tagged and time-stamped.", icon: Smartphone },
+                            { n: "04", t: "Reconcile daily", d: "Match collected funds to bank deposits automatically.", icon: FileCheck2 },
+                        ].map((s) => (
+                            <li key={s.n} className="bg-white p-6">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-xs font-mono text-ink-faint">{s.n}</span>
+                                    <s.icon className="h-4 w-4 text-ink-faint" />
                                 </div>
-                                <div className="space-y-2">
-                                    <div className="text-brand-green font-black text-xs uppercase tracking-[0.3em]">{item.step}</div>
-                                    <h3 className="text-xl font-black text-brand-dark uppercase tracking-tight italic">{item.title}</h3>
-                                    <p className="text-sm font-bold text-brand-dark/50 leading-relaxed px-4">{item.desc}</p>
-                                </div>
-                            </div>
+                                <h3 className="mt-4 text-base font-semibold">{s.t}</h3>
+                                <p className="mt-1.5 text-sm text-ink-muted leading-relaxed">{s.d}</p>
+                            </li>
                         ))}
-                    </div>
+                    </ol>
                 </div>
             </section>
 
             {/* CTA */}
-            <section className="py-24 bg-brand-green">
-                <div className="max-w-4xl mx-auto px-4 text-center text-brand-dark">
-                    <h2 className="text-4xl font-black mb-6 uppercase tracking-tighter">Ready to secure your revenue?</h2>
-                    <p className="text-brand-dark/70 text-lg mb-10 max-w-2xl mx-auto font-bold leading-relaxed">
-                        Join the councils and financial institutions using ProCollector to modernize their operations today.
+            <section>
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+                    <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">Stop guessing where the money went.</h2>
+                    <p className="mt-3 text-ink-muted max-w-xl mx-auto">
+                        Join the councils and financial institutions already running their collections on ProCollector.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link to="/login">
-                            <Button size="lg" variant="secondary" className="h-14 px-10 shadow-xl">
-                                Get Started Now
-                            </Button>
-                        </Link>
-                        <Link to="/contact">
-                            <Button size="lg" variant="outline" className="border-brand-dark text-brand-dark hover:bg-brand-dark hover:text-white h-14 px-10">
-                                Talk to Sales
-                            </Button>
-                        </Link>
+                    <div className="mt-7 flex flex-wrap justify-center gap-3">
+                        <Link to="/signup"><Button size="lg">Request a demo</Button></Link>
+                        <Link to="/contact"><Button size="lg" variant="outline">Talk to sales</Button></Link>
                     </div>
                 </div>
             </section>
@@ -195,35 +137,48 @@ export function Home() {
     );
 }
 
+function DashboardMock() {
+    return (
+        <div className="rounded-xl border border-line bg-white shadow-fintech overflow-hidden">
+            <div className="h-9 border-b border-line bg-bg-subtle flex items-center px-3 gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
+                <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
+                <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
+                <span className="ml-3 text-[11px] text-ink-faint font-mono">app.procollector.com/dashboard</span>
+            </div>
+            <div className="p-5 space-y-4">
+                <div className="grid grid-cols-3 gap-3">
+                    {[
+                        { l: "Collected today", v: "FCFA 4.82M", d: "+12.4%" },
+                        { l: "Active agents", v: "147", d: "+3" },
+                        { l: "Reconciled", v: "98.6%", d: "+0.4%" },
+                    ].map((k) => (
+                        <div key={k.l} className="rounded-lg border border-line p-3">
+                            <p className="text-[11px] text-ink-faint">{k.l}</p>
+                            <p className="mt-1 text-base font-semibold tabular-nums">{k.v}</p>
+                            <p className="mt-0.5 text-[11px] text-brand">{k.d}</p>
+                        </div>
+                    ))}
+                </div>
+                <div className="rounded-lg border border-line p-4">
+                    <div className="flex items-end gap-1.5 h-32">
+                        {[40, 55, 35, 70, 50, 85, 65, 95, 75, 90, 80, 100].map((h, i) => (
+                            <div key={i} className="flex-1 rounded-t bg-brand/15" style={{ height: `${h}%` }}>
+                                <div className="w-full bg-brand rounded-t" style={{ height: `${h * 0.6}%` }} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 const features = [
-    {
-        title: "Zero Revenue Leakage",
-        description: "Every franc collected is digitally recorded. No more 'lost' receipt books or discrepancies between field and office.",
-        icon: ShieldCheck
-    },
-    {
-        title: "Real-time Visibility",
-        description: "Watch collections happen live on your dashboard. Monitor agent performance and location instantly.",
-        icon: BarChart3
-    },
-    {
-        title: "Multi-Tenant Cloud",
-        description: "Built for scale. Whether you are one council or a bank managing thousands of agents, we handle it securely.",
-        icon: Globe2
-    },
-    {
-        title: "Fraud Prevention",
-        description: "Anti-fraud algorithms detect suspicious activities, late entries, and location mismatches automatically.",
-        icon: Users // Using Users as proxy for "Agent integrity"
-    },
-    {
-        title: "Smart Settlements",
-        description: "Automated reconciliation and settlement logic tailored to your organization's internal accounting rules.",
-        icon: Wallet
-    },
-    {
-        title: "Digital Receipts",
-        description: "Instant SMS or highly secure printed receipts that verify genuineness for the payer.",
-        icon: CheckCircle2
-    }
+    { title: "Zero revenue leakage", description: "Every franc collected is digitally recorded. Receipts can't be lost, edited, or duplicated.", icon: ShieldCheck },
+    { title: "Real-time visibility", description: "See collections, agent activity and locations as they happen — not at the end of the day.", icon: BarChart3 },
+    { title: "Multi-tenant by design", description: "From a single council to a bank with thousands of agents, isolation and scale come standard.", icon: Banknote },
+    { title: "Geo-anchored receipts", description: "Every transaction carries GPS, timestamp and a digital signature you can verify later.", icon: MapPin },
+    { title: "Smart reconciliation", description: "Automated matching against bank deposits and your internal accounting rules.", icon: FileCheck2 },
+    { title: "Built for the field", description: "Offline-first mobile app for collectors. Sync when there's signal, work when there isn't.", icon: Smartphone },
 ];

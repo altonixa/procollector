@@ -1,29 +1,70 @@
 @import "tailwindcss";
 
 @theme {
-    --color-brand-green: #194025;
-    --color-brand-green-light: #2ECC71;
-    --color-brand-green-dark: #0D2B18;
+    /* Surfaces */
+    --color-bg: #FFFFFF;
+    --color-bg-subtle: #F8FAFC;
+    --color-bg-muted: #F1F5F9;
 
-    --color-brand-dark: #0F172A;
-    --color-brand-dark-soft: #1e293b;
+    /* Text */
+    --color-ink: #0B1220;
+    --color-ink-muted: #475569;
+    --color-ink-faint: #94A3B8;
 
-    --color-brand-dustGold: #FAF7F2;
-    --color-brand-dustGold-light: #FDFCFB;
-    --color-brand-dustGold-dark: #A6864A;
+    /* Border */
+    --color-line: #E2E8F0;
+    --color-line-strong: #CBD5E1;
 
+    /* Brand — refined forest green, used sparingly */
+    --color-brand: #0F3B22;
+    --color-brand-hover: #0A2A18;
+    --color-brand-soft: #ECF3EE;
+
+    /* Legacy aliases kept so existing portal pages don't break */
+    --color-brand-green: #0F3B22;
+    --color-brand-green-light: #16623A;
+    --color-brand-green-dark: #0A2A18;
+    --color-brand-dark: #0B1220;
+    --color-brand-dark-soft: #1E293B;
     --color-brand-light: #F8FAFC;
-    --color-brand-teal: #2ECC71;
+    --color-brand-teal: #0F3B22;
+    --color-brand-dustGold: #FFFFFF;
+    --color-brand-dustGold-light: #F8FAFC;
+    --color-brand-dustGold-dark: #475569;
+    --color-brand-slate-50: #F8FAFC;
+    --color-brand-slate-100: #F1F5F9;
+    --color-brand-slate-200: #E2E8F0;
+    --color-brand-slate-400: #94A3B8;
+    --color-brand-slate-500: #64748B;
+    --color-brand-slate-600: #475569;
+    --color-brand-gray: #64748B;
 
-    --radius-button: 0.625rem;
-    --radius-card: 1rem;
+    /* Radii */
+    --radius-button: 0.5rem;
+    --radius-card: 0.75rem;
 
-    --shadow-fintech: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-    --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+    /* Shadows */
+    --shadow-fintech: 0 1px 2px 0 rgba(15, 23, 42, 0.04), 0 1px 3px 0 rgba(15, 23, 42, 0.06);
+    --shadow-premium: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+
+    /* Type */
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 @layer base {
-    body {
-        @apply bg-brand-light text-brand-dark;
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
     }
+    body {
+        @apply bg-white text-ink font-sans;
+        font-feature-settings: "ss01", "cv11";
+    }
+    h1, h2, h3, h4, h5, h6 {
+        @apply text-ink;
+        letter-spacing: -0.01em;
+    }
+    /* Kill heavy-handed defaults from older pages */
+    .no-uppercase { text-transform: none !important; letter-spacing: normal !important; }
 }

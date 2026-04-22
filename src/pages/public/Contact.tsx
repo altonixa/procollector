@@ -1,99 +1,103 @@
 import { Button } from "../../components/ui/Button";
-import { Mail, Phone, MapPin, MessageSquare } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { useState } from "react";
 
 export function Contact() {
+    const [submitted, setSubmitted] = useState(false);
+
     return (
-        <div className="bg-white min-h-screen">
-            <div className="max-w-7xl mx-auto px-4 py-24">
-                <div className="flex flex-col lg:flex-row gap-20">
-                    {/* Left Side: Info */}
-                    <div className="flex-1 space-y-12">
+        <div>
+            <section className="border-b border-line">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
+                        {/* Info */}
                         <div>
-                            <h1 className="text-4xl font-extrabold text-brand-dark mb-6">
-                                Let's Talk <span className="text-brand-green">Accountability</span>
+                            <p className="text-xs font-medium text-brand mb-3">Contact</p>
+                            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.05]">
+                                Let's talk about your collections.
                             </h1>
-                            <p className="text-xl text-brand-slate-500 leading-relaxed">
-                                Have questions about how ProCollector can work for your specifically? Our solutions team is ready to help.
+                            <p className="mt-5 text-lg text-ink-muted leading-relaxed">
+                                Tell us a bit about your organisation and what you're trying to fix. We'll come back within one business day.
                             </p>
-                        </div>
 
-                        <div className="space-y-8">
-                            <div className="flex items-start gap-4">
-                                <div className="h-12 w-12 rounded-xl bg-brand-green/10 flex items-center justify-center shrink-0">
-                                    <Mail className="h-6 w-6 text-brand-green" />
-                                </div>
-                                <div>
-                                    <h4 className="text-lg font-bold text-brand-dark">Email Us</h4>
-                                    <p className="text-brand-slate-500">solutions@procollector.com</p>
-                                </div>
-                            </div>
-                            <div className="flex items-start gap-4">
-                                <div className="h-12 w-12 rounded-xl bg-brand-green/10 flex items-center justify-center shrink-0">
-                                    <Phone className="h-6 w-6 text-brand-green" />
-                                </div>
-                                <div>
-                                    <h4 className="text-lg font-bold text-brand-dark">Call Us</h4>
-                                    <p className="text-brand-slate-500">+237 672 09 2003</p>
-                                </div>
-                            </div>
-                            <div className="flex items-start gap-4">
-                                <div className="h-12 w-12 rounded-xl bg-brand-green/10 flex items-center justify-center shrink-0">
-                                    <MapPin className="h-6 w-6 text-brand-green" />
-                                </div>
-                                <div>
-                                    <h4 className="text-lg font-bold text-brand-dark">Visit Us</h4>
-                                    <p className="text-brand-slate-500">Yaounde, Chapel Obili, Cameroon</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="p-8 bg-brand-slate-50 rounded-2xl border border-brand-slate-100">
-                            <h4 className="text-lg font-bold text-brand-dark mb-2">Need Support?</h4>
-                            <p className="text-brand-slate-500 text-sm mb-6 leading-relaxed">
-                                Already a customer? Please use our dedicated support portal for faster response times.
-                            </p>
-                            <Button variant="outline" size="sm">Go to Support Portal</Button>
-                        </div>
-                    </div>
-
-                    {/* Right Side: Form */}
-                    <div className="flex-1">
-                        <div className="bg-white rounded-3xl shadow-premium border border-brand-slate-100 p-8 md:p-12">
-                            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-semibold text-brand-dark">First Name</label>
-                                        <input type="text" className="w-full px-4 py-3 bg-brand-slate-50 border border-brand-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20" placeholder="John" />
+                            <div className="mt-10 space-y-5">
+                                {[
+                                    { icon: Mail, label: "Email", value: "solutions@procollector.com" },
+                                    { icon: Phone, label: "Phone", value: "+237 672 09 2003" },
+                                    { icon: MapPin, label: "Office", value: "Yaoundé, Chapel Obili, Cameroon" },
+                                ].map((c) => (
+                                    <div key={c.label} className="flex items-start gap-3">
+                                        <span className="h-9 w-9 rounded-lg bg-bg-subtle border border-line grid place-items-center flex-shrink-0">
+                                            <c.icon className="h-4 w-4 text-ink-muted" />
+                                        </span>
+                                        <div>
+                                            <p className="text-xs text-ink-faint">{c.label}</p>
+                                            <p className="text-sm font-medium text-ink">{c.value}</p>
+                                        </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-semibold text-brand-dark">Last Name</label>
-                                        <input type="text" className="w-full px-4 py-3 bg-brand-slate-50 border border-brand-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20" placeholder="Doe" />
+                                ))}
+                            </div>
+
+                            <div className="mt-10 p-5 rounded-xl border border-line bg-bg-subtle">
+                                <h4 className="text-sm font-semibold">Already a customer?</h4>
+                                <p className="mt-1 text-sm text-ink-muted">Use our support portal for faster turnaround.</p>
+                                <Button variant="outline" size="sm" className="mt-4">Go to support</Button>
+                            </div>
+                        </div>
+
+                        {/* Form */}
+                        <div>
+                            <div className="rounded-xl border border-line bg-white p-6 sm:p-8">
+                                {submitted ? (
+                                    <div className="py-10 text-center">
+                                        <h3 className="text-lg font-semibold">Thanks — we got it.</h3>
+                                        <p className="mt-2 text-sm text-ink-muted">We'll reply within one business day.</p>
                                     </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-brand-dark">Organization Email</label>
-                                    <input type="email" className="w-full px-4 py-3 bg-brand-slate-50 border border-brand-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20" placeholder="john@council.gov" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-brand-dark">Organization Type</label>
-                                    <select className="w-auto px-4 py-3 bg-brand-slate-50 border border-brand-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20">
-                                        <option>Government Council</option>
-                                        <option>Commercial Bank</option>
-                                        <option>Microfinance</option>
-                                        <option>Property Manager</option>
-                                        <option>Other</option>
-                                    </select>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-brand-dark">How can we help?</label>
-                                    <textarea rows={4} className="w-full px-4 py-3 bg-brand-slate-50 border border-brand-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20" placeholder="Tell us about your requirements..."></textarea>
-                                </div>
-                                <Button className="w-full" size="lg">Send Message <MessageSquare className="ml-2 h-5 w-5" /></Button>
-                            </form>
+                                ) : (
+                                    <form
+                                        className="space-y-5"
+                                        onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
+                                    >
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <Field label="First name" placeholder="John" />
+                                            <Field label="Last name" placeholder="Doe" />
+                                        </div>
+                                        <Field label="Work email" type="email" placeholder="john@council.gov" />
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-medium text-ink-muted">Organization type</label>
+                                            <select className="w-full h-10 px-3 bg-white border border-line rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand">
+                                                <option>Government council</option>
+                                                <option>Commercial bank</option>
+                                                <option>Microfinance</option>
+                                                <option>Property manager</option>
+                                                <option>Other</option>
+                                            </select>
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-medium text-ink-muted">How can we help?</label>
+                                            <textarea rows={4} placeholder="Tell us a bit about what you're trying to do..." className="w-full px-3 py-2 bg-white border border-line rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand resize-none" />
+                                        </div>
+                                        <Button type="submit" className="w-full">Send message</Button>
+                                        <p className="text-xs text-ink-faint text-center">By submitting, you agree to our privacy policy.</p>
+                                    </form>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
+        </div>
+    );
+}
+
+function Field({ label, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { label: string }) {
+    return (
+        <div className="space-y-1.5">
+            <label className="text-xs font-medium text-ink-muted">{label}</label>
+            <input
+                {...props}
+                className="w-full h-10 px-3 bg-white border border-line rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+            />
         </div>
     );
 }

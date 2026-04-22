@@ -15,21 +15,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <button
                 ref={ref}
                 className={cn(
-                    "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 uppercase tracking-wide",
+                    "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
 
-                    // Variants
-                    variant === 'primary' && "bg-blue-600 text-white hover:bg-blue-700 border border-blue-600",
-                    variant === 'secondary' && "bg-gray-600 text-white hover:bg-gray-700 border border-gray-600",
-                    variant === 'outline' && "border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50",
-                    variant === 'destructive' && "bg-red-600 text-white hover:bg-red-700 border border-red-600",
-                    variant === 'ghost' && "text-gray-600 hover:bg-gray-100",
-                    variant === 'white' && "bg-white text-gray-900 hover:bg-gray-50 border border-gray-300",
+                    variant === 'primary' && "bg-brand text-white hover:bg-brand-hover",
+                    variant === 'secondary' && "bg-ink text-white hover:bg-ink/90",
+                    variant === 'outline' && "border border-line-strong bg-white text-ink hover:bg-bg-subtle",
+                    variant === 'destructive' && "bg-red-600 text-white hover:bg-red-700",
+                    variant === 'ghost' && "text-ink hover:bg-bg-subtle",
+                    variant === 'white' && "bg-white text-ink hover:bg-bg-subtle border border-line",
 
-                    // Sizes
-                    size === 'default' && "h-12 px-8",
-                    size === 'sm' && "h-10 px-6 text-xs",
-                    size === 'lg' && "h-16 px-12 text-base rounded-2xl",
-                    size === 'icon' && "h-12 w-12",
+                    size === 'default' && "h-10 px-4",
+                    size === 'sm' && "h-8 px-3 text-xs",
+                    size === 'lg' && "h-11 px-6 text-[15px]",
+                    size === 'icon' && "h-10 w-10",
 
                     className
                 )}

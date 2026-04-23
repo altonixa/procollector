@@ -6,7 +6,7 @@ A comprehensive, multi-tenant SaaS platform for digital financial collections, a
 
 ![Altonixa Swift Finance](https://img.shields.io/badge/Altonixa-Swift%20Finance-2563eb?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjE4QzE0IDIwLjIgMTIuMiAyMiAxMCAyMkg0QzEuOCAyMiAwIDIwLjIgMCAxOFYwQzAgMS44IDEuOCAwIDQgMFYxNkM0IDE3LjEgNC45IDE4IDYgMThIMTZDNS44IDE4IDUgMTYuMSA1IDE0VjJDNSAwLjkgNS45IDAgNyAwVjE0QzcgMTUuMSAxNy45IDE2IDkgMTZIMTJDMTMuMSAxNiAxNCAxNS4xIDE0IDE0VjRDMTQgMi45IDEzLjEgMiAxMiAyWk0xMCAxOFY2QzEwIDQuOSAxMC45IDQgMTIgNFYxNkMxMCAxNy4xIDkuMSAxOCA4IDE4SDEwWk04IDZIMTZWMTZIMTZWNFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==)
 ![React](https://img.shields.io/badge/React-19.2.0-61dafb?style=flat-square&logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178c6?style=flat-square&logo=typescript)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178c6?style=flat-square&logo=typescript) 
 ![Node.js](https://img.shields.io/badge/Node.js-20+-339933?style=flat-square&logo=node.js)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479a1?style=flat-square&logo=mysql)
 
